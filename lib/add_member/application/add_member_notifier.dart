@@ -50,10 +50,32 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
       final newUserId = generateMemberId();
 
       // Create a new user
+
+      /**
+       * User details required for registering :
+       * - Pan card (capital cased)
+       * - Phone 
+       * - Email
+       * - Phone
+       * - Name
+       * - List<Interest> (model)
+       *    a. income id
+       *    b. interest amount
+       *    c. interest type ( non-working | direct-referral | uni-level )
+       *    d. updated_at and created_at timestamp
+       * - List<Income> (model)
+       *    a. income id
+       *    b. deposit amount 
+       *    c. created_at timestamp
+       *    d. updated_at timestamp
+       *    e. 
+       * - timestamp created_at
+       * - timestamp updated_at
+       */
       final newUser = UserModel(
         id: newUserId,
         username: name,
-        phoneNumber: phone,
+        phoneNumber: phone, // deposit ammount missing
         pan: panCard.toUpperCase(),
         wallet: const WalletModel(),
         isVerified: false,

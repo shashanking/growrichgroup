@@ -112,7 +112,7 @@ class FirebaseAuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<bool> signInWithUsernameAndPassword(
+  Future<bool> signInWithUsernameAndPassword( // in use
       String username, String password) async {
     var email = await _getEmailForUsername(username);
     if (email == null) {
