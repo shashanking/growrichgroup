@@ -13,15 +13,19 @@ class UserModel with _$UserModel {
     @Default('') String uid,
     @Default('') String username,
     @Default('') String phoneNumber,
+    @Default('') String emailId,
+    @Default('') String depositId,
+    @Default('123456') String temporaryPassword,
+    @Default('') String depositAmount,
     @Default(false) bool isVerified,
+    @Default(true) bool isFirstTime,
     @Default('') String? pan,
     required WalletModel wallet,
     @Default('') String referredBy,
     @Default([]) List<String> referredIds,
   }) = _UserModel;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
-      _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 }
 
 @freezed
@@ -34,16 +38,14 @@ class WalletModel with _$WalletModel {
     @Default([]) List<BalanceStat> stats,
   }) = _WalletModel;
 
-  factory WalletModel.fromJson(Map<String, dynamic> json) =>
-      _$WalletModelFromJson(json);
+  factory WalletModel.fromJson(Map<String, dynamic> json) => _$WalletModelFromJson(json);
 }
 
 @freezed
 class TransactionHistory with _$TransactionHistory {
   @JsonSerializable()
   const factory TransactionHistory({
-    @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
-    DateTime? datetime,
+    @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp) DateTime? datetime,
     @Default(0) int transaction,
     @Default('') String transactionStatus,
     @Default('') String transactionType,
@@ -66,13 +68,11 @@ Timestamp? _dateTimeToTimestamp(DateTime? dateTime) {
 class BalanceStat with _$BalanceStat {
   @JsonSerializable()
   const factory BalanceStat({
-    @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
-    DateTime? createdAt,
+    @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp) DateTime? createdAt,
     @Default(0.0) double transactionAmount,
     @Default('') String tournamentName,
     @Default(0.0) double balanceBefore,
   }) = _BalanceStat;
 
-  factory BalanceStat.fromJson(Map<String, dynamic> json) =>
-      _$BalanceStatFromJson(json);
+  factory BalanceStat.fromJson(Map<String, dynamic> json) => _$BalanceStatFromJson(json);
 }

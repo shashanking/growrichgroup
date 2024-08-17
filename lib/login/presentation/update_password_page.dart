@@ -9,17 +9,18 @@ import 'package:growrichgroup_dashboard/routes/app_router.gr.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 @RoutePage()
-class LoginPage extends ConsumerStatefulWidget {
-  LoginPage();
+class UpdatePasswordPage extends ConsumerStatefulWidget {
+  UpdatePasswordPage();
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _LoginPageState extends ConsumerState<UpdatePasswordPage> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _tempPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -63,31 +64,47 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       child: Column(
                         children: [
                           TextFormField(
-                            controller: _usernameController,
+                            controller: _tempPasswordController,
                             decoration: InputDecoration(
-                              labelText: 'Username',
-                              prefixIcon: Icon(Icons.person, color: Theme.of(context).primaryColor),
+                              labelText: 'Temporary Password',
+                              prefixIcon: Icon(Icons.lock, color: Theme.of(context).primaryColor),
                             ),
                             style: TextStyle(color: Colors.white),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your username';
+                                return 'Please enter your temporary password';
                               }
                               return null;
                             },
                           ),
                           SizedBox(height: 16),
                           TextFormField(
-                            controller: _passwordController,
+                            controller: _newPasswordController,
                             decoration: InputDecoration(
-                              labelText: 'Password',
+                              labelText: 'New Password',
                               prefixIcon: Icon(Icons.lock, color: Theme.of(context).primaryColor),
                             ),
                             obscureText: true,
                             style: TextStyle(color: Colors.white),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
+                                return 'Please enter your new password';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          TextFormField(
+                            controller: _confirmPasswordController,
+                            decoration: InputDecoration(
+                              labelText: 'Confirm Password',
+                              prefixIcon: Icon(Icons.lock, color: Theme.of(context).primaryColor),
+                            ),
+                            obscureText: true,
+                            style: TextStyle(color: Colors.white),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please re enter your password';
                               }
                               return null;
                             },
@@ -95,22 +112,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           SizedBox(height: 24),
                           ElevatedButton(
                             onPressed: () async {
-                              final stateNotifier = ref.read(authProvider.notifier);
-                              if (!isLoading) {
-                                final res = await stateNotifier.signIn(
-                                  _usernameController.text,
-                                  _passwordController.text,
-                                );
-                                if (stateNotifier.isFirstTime && res == false) {
-                                  context.router.push(const UpdatePasswordRoute());
-                                } else if (stateNotifier.isFirstTime == false && res == true) {
-                                  context.router.push(const DashboardRoute());
-                                } else {
-                                  await Fluttertoast.showToast(msg: 'Invalid Credentials');
-                                }
-                              }
+                              await ref
+                                  .read(authProvider.notifier)
+                                  .updatePassword(_confirmPasswordController.text, () {
+                                context.pushRoute(const DashboardRoute());
+                              });
                             },
-                            child: Text('LOGIN', style: TextStyle(fontSize: 16)),
+                            child: Text('Update Password', style: TextStyle(fontSize: 16)),
                           ),
                         ],
                       ),

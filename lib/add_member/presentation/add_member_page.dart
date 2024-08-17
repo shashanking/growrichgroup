@@ -20,6 +20,7 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
   final _emailController = TextEditingController();
   final _panCardController = TextEditingController();
   final _referralIDController = TextEditingController();
+  final _depositAmountController = TextEditingController();
 
   @override
   void dispose() {
@@ -28,6 +29,7 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
     _emailController.dispose();
     _panCardController.dispose();
     _referralIDController.dispose();
+    _depositAmountController.dispose();
     super.dispose();
   }
 
@@ -119,6 +121,23 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                 TextFormField(
                   controller: _referralIDController,
                   decoration: InputDecoration(
+                    labelText: 'Referral ID',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.call_made_rounded),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the referral id';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 24),
+
+                //Deposit Amount
+                TextFormField(
+                  controller: _depositAmountController,
+                  decoration: InputDecoration(
                     labelText: 'Deposit Amount',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.money),
@@ -142,7 +161,7 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                         phone: _phoneController.text,
                         email: _emailController.text,
                         panCard: _panCardController.text,
-                        depositAmount: _referralIDController.text,
+                        depositAmount: _depositAmountController.text,
                       );
                     }
                   },
