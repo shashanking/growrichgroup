@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
     return ResponsiveSizer(builder: (context, orientation, screenType) {
       return MaterialApp.router(
         title: 'Flutter Web App',
+        debugShowCheckedModeBanner: false,
         theme: AppTheme.theme,
         // home: LoginPage(loginUseCase: loginUseCase),
         routerDelegate: _appRouter.delegate(),

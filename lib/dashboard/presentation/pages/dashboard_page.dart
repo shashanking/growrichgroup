@@ -34,25 +34,25 @@ class DashboardPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       OverviewCard(
-                        title: 'Net Sales',
+                        title: 'Deposit',
                         value: '₹27,012',
                         percentage: '+2% than last week',
                         color: Colors.pinkAccent,
                       ),
                       OverviewCard(
-                        title: 'Orders',
+                        title: 'ROI',
                         value: '5,661',
                         percentage: '+3.21% than last month',
                         color: Colors.purpleAccent,
                       ),
                       OverviewCard(
-                        title: 'Customers',
+                        title: 'Members',
                         value: '15,138',
-                        percentage: '+12% than last month',
+                        percentage: '28 Referred Members',
                         color: Colors.greenAccent,
                       ),
                       OverviewCard(
-                        title: 'Growth',
+                        title: 'Non Woking Income',
                         value: '19.56%',
                         percentage: '-4.87% than last week',
                         color: Colors.yellowAccent,
@@ -66,6 +66,7 @@ class DashboardPage extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'Direct Referrals',
@@ -75,7 +76,7 @@ class DashboardPage extends StatelessWidget {
                                 ),
                               ),
                               Expanded(
-                                child: TopSellingProducts(),
+                                child: DirectReferralListCard(),
                               ),
                             ],
                           ),
@@ -83,9 +84,9 @@ class DashboardPage extends StatelessWidget {
                         SizedBox(width: 16),
                         Column(
                           children: [
-                            AcquisitionChart(),
+                            GlobalIncomeCard(),
                             SizedBox(height: 16),
-                            CustomersChart(),
+                            GlobalRewardCard(),
                           ],
                         ),
                       ],

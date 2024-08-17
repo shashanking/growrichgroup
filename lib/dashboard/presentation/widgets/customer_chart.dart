@@ -1,7 +1,7 @@
 // lib/presentation/widgets/customers_chart.dart
 import 'package:flutter/material.dart';
 
-class CustomersChart extends StatelessWidget {
+class GlobalIncomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -11,7 +11,7 @@ class CustomersChart extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Customers',
+              'Global Income',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -24,7 +24,7 @@ class CustomersChart extends StatelessWidget {
               color: Colors.indigo[700],
               child: Center(
                 child: Text(
-                  'Bar Chart Placeholder',
+                  'Coming soon...',
                   style: TextStyle(color: Colors.white),
                 ),
               ),

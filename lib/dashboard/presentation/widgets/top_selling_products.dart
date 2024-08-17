@@ -1,11 +1,11 @@
 // lib/presentation/widgets/top_selling_products.dart
 import 'package:flutter/material.dart';
 
-class TopSellingProducts extends StatelessWidget {
+class DirectReferralListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.indigo[800],
+      color: Colors.white.withOpacity(0.2),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
