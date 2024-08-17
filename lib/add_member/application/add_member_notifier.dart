@@ -28,6 +28,13 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
     return '$prefix$randomNumber';
   }
 
+  String generateTemporaryPassword() {
+    const prefix = 'PW';
+    final random = Random();
+    final randomNumber = random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
+    return '$prefix$randomNumber';
+  }
+
   Future<bool> registerMember({
     required String name,
     required String phone,
@@ -58,6 +65,7 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
 
       final newUserId = generateMemberId();
       final newDepositId = generateDepositId();
+      final temporaryPassword = generateTemporaryPassword();
 
       // Create a new user
 
@@ -87,6 +95,7 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
         phoneNumber: phone, // deposit ammount missing
         emailId: email,
         depositId: newDepositId,
+        temporaryPassword: temporaryPassword,
         pan: panCard.toUpperCase(),
         wallet: const WalletModel(),
         isVerified: false,

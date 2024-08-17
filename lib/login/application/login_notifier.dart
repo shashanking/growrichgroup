@@ -23,11 +23,48 @@ class AuthNotifier extends StateNotifier<LoginState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      bool res = await _authRepository.signInWithUsernameAndPassword(
-          username, password);
+      final userSnapshot = await _firestore
+          .collection('users')
+          .where('id', isEqualTo: username)
+          // .limit(1)
+          .get();
+
+      print(userSnapshot.docs.first.data());
+
+      if (userSnapshot.docs.isNotEmpty) {
+        final userDoc = userSnapshot.docs.first;
+
+        final bool isFirstTime = userDoc.data()['isFirstTime'] ?? true;
+        final String userId = userDoc.data()['id'];
+        final String userEmail = userDoc.data()['emailId'];
+        final String temporaryPassword = userDoc.data()['temporaryPassword'];
+
+        if (isFirstTime) {
+          // 2. If it's the user's first login, add them to the _authRepository
+          await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(email: userEmail, password: password);
+
+          //   // 3. Prompt the user to change their password
+          //   state = state.copyWith(
+          //     isLoading: false,
+          //     isVerified: true,
+          //   );
+          return true; // Indicate further action is required
+        } else {
+          //   // 4. If not the first login, authenticate the user
+          await _authRepository.signInWithUsernameAndPassword(username, password);
+          //   state = state.copyWith(
+          //     isLoading: false,
+          //     isAuthenticated: true,
+          //   );
+          return true;
+        }
+      }
+
+      // bool res = await _authRepository.signInWithUsernameAndPassword(username, password);
 
       state = state.copyWith(isLoading: false);
-      return res;
+      return true;
     } catch (e) {
       state = state.copyWith(isLoading: false);
 
