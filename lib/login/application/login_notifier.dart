@@ -40,7 +40,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
 
         isFirstTime = userDoc.data()['isFirstTime'] ?? true;
         userId = userDoc.data()['id'];
-        userEmail = userDoc.data()['emailId'];
+        userEmail = userDoc.data()['emailId'] ?? '';
         final String temporaryPassword = userDoc.data()['temporaryPassword'];
 
         if (isFirstTime) {
@@ -56,7 +56,8 @@ class AuthNotifier extends StateNotifier<LoginState> {
           return false; // Indicate further action is required
         } else {
           //   // 4. If not the first login, authenticate the user
-          await _authRepository.signInWithUsernameAndPassword(username, password);
+          await _authRepository.signInWithUsernameAndPassword(
+              username, password);
           //   state = state.copyWith(
           //     isLoading: false,
           //     isAuthenticated: true,
@@ -77,7 +78,8 @@ class AuthNotifier extends StateNotifier<LoginState> {
     }
   }
 
-  Future<void> updatePassword(String password, VoidCallback voidCallBack) async {
+  Future<void> updatePassword(
+      String password, VoidCallback voidCallBack) async {
     try {
       state = state.copyWith(isLoading: true);
 

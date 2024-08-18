@@ -115,23 +115,23 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                // SizedBox(height: 16),
 
-                // Referral ID Field
-                TextFormField(
-                  controller: _referralIDController,
-                  decoration: InputDecoration(
-                    labelText: 'Referral ID',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.call_made_rounded),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the referral id';
-                    }
-                    return null;
-                  },
-                ),
+                // // Referral ID Field
+                // TextFormField(
+                //   controller: _referralIDController,
+                //   decoration: InputDecoration(
+                //     labelText: 'Referral ID',
+                //     border: OutlineInputBorder(),
+                //     prefixIcon: Icon(Icons.call_made_rounded),
+                //   ),
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Please enter the referral id';
+                //     }
+                //     return null;
+                //   },
+                // ),
                 SizedBox(height: 24),
 
                 //Deposit Amount

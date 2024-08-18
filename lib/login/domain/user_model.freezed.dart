@@ -24,7 +24,12 @@ mixin _$UserModel {
   String get uid => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
   String get phoneNumber => throw _privateConstructorUsedError;
+  String get emailId => throw _privateConstructorUsedError;
+  String get depositId => throw _privateConstructorUsedError;
+  String get temporaryPassword => throw _privateConstructorUsedError;
+  String get depositAmount => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
+  bool get isFirstTime => throw _privateConstructorUsedError;
   String? get pan => throw _privateConstructorUsedError;
   WalletModel get wallet => throw _privateConstructorUsedError;
   String get referredBy => throw _privateConstructorUsedError;
@@ -46,7 +51,12 @@ abstract class $UserModelCopyWith<$Res> {
       String uid,
       String username,
       String phoneNumber,
+      String emailId,
+      String depositId,
+      String temporaryPassword,
+      String depositAmount,
       bool isVerified,
+      bool isFirstTime,
       String? pan,
       WalletModel wallet,
       String referredBy,
@@ -72,7 +82,12 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? uid = null,
     Object? username = null,
     Object? phoneNumber = null,
+    Object? emailId = null,
+    Object? depositId = null,
+    Object? temporaryPassword = null,
+    Object? depositAmount = null,
     Object? isVerified = null,
+    Object? isFirstTime = null,
     Object? pan = freezed,
     Object? wallet = null,
     Object? referredBy = null,
@@ -95,9 +110,29 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
               as String,
+      emailId: null == emailId
+          ? _value.emailId
+          : emailId // ignore: cast_nullable_to_non_nullable
+              as String,
+      depositId: null == depositId
+          ? _value.depositId
+          : depositId // ignore: cast_nullable_to_non_nullable
+              as String,
+      temporaryPassword: null == temporaryPassword
+          ? _value.temporaryPassword
+          : temporaryPassword // ignore: cast_nullable_to_non_nullable
+              as String,
+      depositAmount: null == depositAmount
+          ? _value.depositAmount
+          : depositAmount // ignore: cast_nullable_to_non_nullable
+              as String,
       isVerified: null == isVerified
           ? _value.isVerified
           : isVerified // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isFirstTime: null == isFirstTime
+          ? _value.isFirstTime
+          : isFirstTime // ignore: cast_nullable_to_non_nullable
               as bool,
       pan: freezed == pan
           ? _value.pan
@@ -140,7 +175,12 @@ abstract class _$$UserModelImplCopyWith<$Res>
       String uid,
       String username,
       String phoneNumber,
+      String emailId,
+      String depositId,
+      String temporaryPassword,
+      String depositAmount,
       bool isVerified,
+      bool isFirstTime,
       String? pan,
       WalletModel wallet,
       String referredBy,
@@ -165,7 +205,12 @@ class __$$UserModelImplCopyWithImpl<$Res>
     Object? uid = null,
     Object? username = null,
     Object? phoneNumber = null,
+    Object? emailId = null,
+    Object? depositId = null,
+    Object? temporaryPassword = null,
+    Object? depositAmount = null,
     Object? isVerified = null,
+    Object? isFirstTime = null,
     Object? pan = freezed,
     Object? wallet = null,
     Object? referredBy = null,
@@ -188,9 +233,29 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
               as String,
+      emailId: null == emailId
+          ? _value.emailId
+          : emailId // ignore: cast_nullable_to_non_nullable
+              as String,
+      depositId: null == depositId
+          ? _value.depositId
+          : depositId // ignore: cast_nullable_to_non_nullable
+              as String,
+      temporaryPassword: null == temporaryPassword
+          ? _value.temporaryPassword
+          : temporaryPassword // ignore: cast_nullable_to_non_nullable
+              as String,
+      depositAmount: null == depositAmount
+          ? _value.depositAmount
+          : depositAmount // ignore: cast_nullable_to_non_nullable
+              as String,
       isVerified: null == isVerified
           ? _value.isVerified
           : isVerified // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isFirstTime: null == isFirstTime
+          ? _value.isFirstTime
+          : isFirstTime // ignore: cast_nullable_to_non_nullable
               as bool,
       pan: freezed == pan
           ? _value.pan
@@ -221,7 +286,12 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
       this.uid = '',
       this.username = '',
       this.phoneNumber = '',
+      this.emailId = '',
+      this.depositId = '',
+      this.temporaryPassword = '123456',
+      this.depositAmount = '',
       this.isVerified = false,
+      this.isFirstTime = true,
       this.pan = '',
       required this.wallet,
       this.referredBy = '',
@@ -245,7 +315,22 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
   final String phoneNumber;
   @override
   @JsonKey()
+  final String emailId;
+  @override
+  @JsonKey()
+  final String depositId;
+  @override
+  @JsonKey()
+  final String temporaryPassword;
+  @override
+  @JsonKey()
+  final String depositAmount;
+  @override
+  @JsonKey()
   final bool isVerified;
+  @override
+  @JsonKey()
+  final bool isFirstTime;
   @override
   @JsonKey()
   final String? pan;
@@ -265,7 +350,7 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserModel(id: $id, uid: $uid, username: $username, phoneNumber: $phoneNumber, isVerified: $isVerified, pan: $pan, wallet: $wallet, referredBy: $referredBy, referredIds: $referredIds)';
+    return 'UserModel(id: $id, uid: $uid, username: $username, phoneNumber: $phoneNumber, emailId: $emailId, depositId: $depositId, temporaryPassword: $temporaryPassword, depositAmount: $depositAmount, isVerified: $isVerified, isFirstTime: $isFirstTime, pan: $pan, wallet: $wallet, referredBy: $referredBy, referredIds: $referredIds)';
   }
 
   @override
@@ -277,7 +362,12 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
       ..add(DiagnosticsProperty('uid', uid))
       ..add(DiagnosticsProperty('username', username))
       ..add(DiagnosticsProperty('phoneNumber', phoneNumber))
+      ..add(DiagnosticsProperty('emailId', emailId))
+      ..add(DiagnosticsProperty('depositId', depositId))
+      ..add(DiagnosticsProperty('temporaryPassword', temporaryPassword))
+      ..add(DiagnosticsProperty('depositAmount', depositAmount))
       ..add(DiagnosticsProperty('isVerified', isVerified))
+      ..add(DiagnosticsProperty('isFirstTime', isFirstTime))
       ..add(DiagnosticsProperty('pan', pan))
       ..add(DiagnosticsProperty('wallet', wallet))
       ..add(DiagnosticsProperty('referredBy', referredBy))
@@ -295,8 +385,17 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
                 other.username == username) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
+            (identical(other.emailId, emailId) || other.emailId == emailId) &&
+            (identical(other.depositId, depositId) ||
+                other.depositId == depositId) &&
+            (identical(other.temporaryPassword, temporaryPassword) ||
+                other.temporaryPassword == temporaryPassword) &&
+            (identical(other.depositAmount, depositAmount) ||
+                other.depositAmount == depositAmount) &&
             (identical(other.isVerified, isVerified) ||
                 other.isVerified == isVerified) &&
+            (identical(other.isFirstTime, isFirstTime) ||
+                other.isFirstTime == isFirstTime) &&
             (identical(other.pan, pan) || other.pan == pan) &&
             (identical(other.wallet, wallet) || other.wallet == wallet) &&
             (identical(other.referredBy, referredBy) ||
@@ -313,7 +412,12 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
       uid,
       username,
       phoneNumber,
+      emailId,
+      depositId,
+      temporaryPassword,
+      depositAmount,
       isVerified,
+      isFirstTime,
       pan,
       wallet,
       referredBy,
@@ -339,7 +443,12 @@ abstract class _UserModel implements UserModel {
       final String uid,
       final String username,
       final String phoneNumber,
+      final String emailId,
+      final String depositId,
+      final String temporaryPassword,
+      final String depositAmount,
       final bool isVerified,
+      final bool isFirstTime,
       final String? pan,
       required final WalletModel wallet,
       final String referredBy,
@@ -357,7 +466,17 @@ abstract class _UserModel implements UserModel {
   @override
   String get phoneNumber;
   @override
+  String get emailId;
+  @override
+  String get depositId;
+  @override
+  String get temporaryPassword;
+  @override
+  String get depositAmount;
+  @override
   bool get isVerified;
+  @override
+  bool get isFirstTime;
   @override
   String? get pan;
   @override
