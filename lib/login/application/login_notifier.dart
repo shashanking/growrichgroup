@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:growrichgroup_dashboard/login/application/login_state.dart';
 import 'package:growrichgroup_dashboard/login/domain/i_auth_repository.dart';
 import 'package:riverpod/riverpod.dart';
@@ -22,23 +21,8 @@ class AuthNotifier extends StateNotifier<LoginState> {
   String userEmail = '';
   String userId = '';
 
-  bool areLoginCredentialsValid(String username, String password) {
-    if (username.isEmpty) {
-      Fluttertoast.showToast(msg: 'Username is empty');
-      return false;
-    } else if (password.isEmpty) {
-      Fluttertoast.showToast(msg: 'Password is empty');
-      return false;
-    }
-    return true;
-  }
-
-  Future<void> signIn(String username, String password) async {
+  Future<bool> signIn(String username, String password) async {
     state = state.copyWith(isLoading: true);
-
-    if (!areLoginCredentialsValid(username, password)) {
-      return;
-    }
 
     isLoginValid = true;
 
@@ -65,7 +49,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
           //     isVerified: true,
           //   );
           state = state.copyWith(isLoading: false);
-          // return false; // Indicate further action is required
+          return false; // Indicate further action is required
         } else {
           //   // 4. If not the first login, authenticate the user
           await _authRepository.signInWithUsernameAndPassword(username, password);
@@ -74,19 +58,19 @@ class AuthNotifier extends StateNotifier<LoginState> {
           //     isAuthenticated: true,
           //   );
           state = state.copyWith(isLoading: false);
-          // return true;
+          return true;
         }
       } else {
         // Handle invalid credentials
         state = state.copyWith(isLoading: false);
-        // return false;
+        return false;
       }
 
       // bool res = await _authRepository.signInWithUsernameAndPassword(username, password);
     } catch (e) {
       state = state.copyWith(isLoading: false);
 
-      // return false;
+      return false;
     }
   }
 
