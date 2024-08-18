@@ -22,6 +22,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _passwordController = TextEditingController();
 
   @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authProvider.select((state) => state.isLoading));
     return Scaffold(
@@ -97,13 +104,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             onPressed: () async {
                               final stateNotifier = ref.read(authProvider.notifier);
                               if (!isLoading) {
-                                final res = await stateNotifier.signIn(
-                                  _usernameController.text,
-                                  _passwordController.text,
-                                );
-                                if (stateNotifier.isFirstTime && res == false) {
+                                await stateNotifier.signIn(
+                                    _usernameController.text, _passwordController.text);
+                                if (!stateNotifier.isLoginValid) {
+                                  return;
+                                } else if (stateNotifier.isFirstTime) {
                                   context.router.push(const UpdatePasswordRoute());
-                                } else if (stateNotifier.isFirstTime == false && res == true) {
+                                } else if (stateNotifier.isFirstTime == false) {
                                   context.router.push(const DashboardRoute());
                                 } else {
                                   await Fluttertoast.showToast(msg: 'Invalid Credentials');

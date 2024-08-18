@@ -18,24 +18,21 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
   String generateMemberId() {
     const prefix = 'GG';
     final random = Random();
-    final randomNumber =
-        random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
+    final randomNumber = random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
     return '$prefix$randomNumber';
   }
 
   String generateDepositId() {
     const prefix = 'DD';
     final random = Random();
-    final randomNumber =
-        random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
+    final randomNumber = random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
     return '$prefix$randomNumber';
   }
 
   String generateTemporaryPassword() {
     const prefix = 'PW';
     final random = Random();
-    final randomNumber =
-        random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
+    final randomNumber = random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
     return '$prefix$randomNumber';
   }
 
@@ -44,13 +41,12 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
     return email.split('@')[0];
   }
 
-  Future<bool> registerMember({
+  Future<void> registerMember({
     required String name,
     required String phone,
     required String email,
     required String panCard,
-    required String
-        depositAmount, // Pass the current user's username as referralID
+    required String depositAmount, // Pass the current user's username as referralID
   }) async {
     state = state.copyWith(isLoading: true);
     final firestore = FirebaseFirestore.instance;
@@ -58,29 +54,20 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
 
     try {
       // Check if a user already exists with the given phone number, PAN, or email
-      final checkPhone = await firestore
-          .collection('users')
-          .where('phoneNumber', isEqualTo: phone)
-          .get();
+      final checkPhone =
+          await firestore.collection('users').where('phoneNumber', isEqualTo: phone).get();
 
-      final checkEmail = await firestore
-          .collection('users')
-          .where('emailID', isEqualTo: email)
-          .get();
+      final checkEmail =
+          await firestore.collection('users').where('emailID', isEqualTo: email).get();
 
-      final checkPan = await firestore
-          .collection('users')
-          .where('pan', isEqualTo: panCard)
-          .get();
+      final checkPan = await firestore.collection('users').where('pan', isEqualTo: panCard).get();
 
-      if (checkPhone.docs.isNotEmpty ||
-          checkEmail.docs.isNotEmpty ||
-          checkPan.docs.isNotEmpty) {
+      if (checkPhone.docs.isNotEmpty || checkEmail.docs.isNotEmpty || checkPan.docs.isNotEmpty) {
         // A user with this phone, email, or PAN already exists
         state = state.copyWith(isLoading: false);
         Fluttertoast.showToast(msg: 'User already exisits');
 
-        return false;
+        // return false;
       }
 
       final newUserId = generateMemberId();
@@ -140,29 +127,25 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
       await firestore.collection('users').doc(newUser.id).set(newUser.toJson());
 
       // Add the new deposit to Firestore
-      await firestore
-          .collection('deposits')
-          .doc(newDeposit.depositId)
-          .set(newDeposit.toJson());
+      await firestore.collection('deposits').doc(newDeposit.depositId).set(newDeposit.toJson());
 
       state = state.copyWith(newUser: newUser);
 
       // Add the new user's ID to the current user's referredIds list
       if (referredByUser.isNotEmpty) {
-        final currentUserRef =
-            firestore.collection('users').doc(referredByUser);
+        final currentUserRef = firestore.collection('users').doc(referredByUser);
         await currentUserRef.update({
           'referredIds': FieldValue.arrayUnion([newUserId])
         });
       }
 
       state = state.copyWith(isLoading: false);
-      return true;
+      // return true;
     } catch (e) {
       // Handle any errors here
       print(e);
       state = state.copyWith(isLoading: false);
-      return false;
+      // return false;
     }
   }
 }
