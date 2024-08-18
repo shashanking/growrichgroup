@@ -53,6 +53,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
           //     isLoading: false,
           //     isVerified: true,
           //   );
+          state = state.copyWith(isLoading: false);
           return false; // Indicate further action is required
         } else {
           //   // 4. If not the first login, authenticate the user
@@ -62,6 +63,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
           //     isLoading: false,
           //     isAuthenticated: true,
           //   );
+          state = state.copyWith(isLoading: false);
           return true;
         }
       } else {

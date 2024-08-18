@@ -46,7 +46,8 @@ class SideNavigation extends ConsumerWidget {
             leading: Icon(Icons.exit_to_app, color: Colors.white),
             title: Text('Logout', style: TextStyle(color: Colors.white)),
             onTap: () {
-              // Implement logout functionality
+              stateNotifier.logout();
+              context.router.replaceAll([LoginRoute()]);
             },
           ),
           Spacer(), // Pushes the rest to the bottom

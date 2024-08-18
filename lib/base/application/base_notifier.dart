@@ -1,10 +1,12 @@
 // ignore_for_file: parameter_assignments, empty_catches
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:growrichgroup_dashboard/services/auth_service.dart';
 import 'base_state.dart';
 
 class BaseNotifier extends StateNotifier<BaseState> {
   BaseNotifier() : super(const BaseState());
+  FirebaseAuthRepository firebaseAuthRepository = FirebaseAuthRepository();
 
   void tapBottomNavIndex(int value) {
     state = state.copyWith(lastBottomNavIndex: state.bottomNavIndex);
@@ -22,5 +24,9 @@ class BaseNotifier extends StateNotifier<BaseState> {
   void resetBottomNavIndex() {
     state = state.copyWith(bottomNavIndex: 0);
     state = state.copyWith(lastBottomNavIndex: 0);
+  }
+
+  void logout() {
+    firebaseAuthRepository.logout();
   }
 }

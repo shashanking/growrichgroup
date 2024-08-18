@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AddMemberState {
   bool get isLoading => throw _privateConstructorUsedError;
+  UserModel? get newUser => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AddMemberStateCopyWith<AddMemberState> get copyWith =>
@@ -29,7 +30,9 @@ abstract class $AddMemberStateCopyWith<$Res> {
           AddMemberState value, $Res Function(AddMemberState) then) =
       _$AddMemberStateCopyWithImpl<$Res, AddMemberState>;
   @useResult
-  $Res call({bool isLoading});
+  $Res call({bool isLoading, UserModel? newUser});
+
+  $UserModelCopyWith<$Res>? get newUser;
 }
 
 /// @nodoc
@@ -46,13 +49,30 @@ class _$AddMemberStateCopyWithImpl<$Res, $Val extends AddMemberState>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? newUser = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      newUser: freezed == newUser
+          ? _value.newUser
+          : newUser // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<$Res>? get newUser {
+    if (_value.newUser == null) {
+      return null;
+    }
+
+    return $UserModelCopyWith<$Res>(_value.newUser!, (value) {
+      return _then(_value.copyWith(newUser: value) as $Val);
+    });
   }
 }
 
@@ -64,7 +84,10 @@ abstract class _$$AddMemberStateImplCopyWith<$Res>
       __$$AddMemberStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading});
+  $Res call({bool isLoading, UserModel? newUser});
+
+  @override
+  $UserModelCopyWith<$Res>? get newUser;
 }
 
 /// @nodoc
@@ -79,12 +102,17 @@ class __$$AddMemberStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? newUser = freezed,
   }) {
     return _then(_$AddMemberStateImpl(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      newUser: freezed == newUser
+          ? _value.newUser
+          : newUser // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
     ));
   }
 }
@@ -92,15 +120,19 @@ class __$$AddMemberStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AddMemberStateImpl extends _AddMemberState {
-  const _$AddMemberStateImpl({this.isLoading = false}) : super._();
+  const _$AddMemberStateImpl({this.isLoading = false, this.newUser = null})
+      : super._();
 
   @override
   @JsonKey()
   final bool isLoading;
+  @override
+  @JsonKey()
+  final UserModel? newUser;
 
   @override
   String toString() {
-    return 'AddMemberState(isLoading: $isLoading)';
+    return 'AddMemberState(isLoading: $isLoading, newUser: $newUser)';
   }
 
   @override
@@ -109,11 +141,12 @@ class _$AddMemberStateImpl extends _AddMemberState {
         (other.runtimeType == runtimeType &&
             other is _$AddMemberStateImpl &&
             (identical(other.isLoading, isLoading) ||
-                other.isLoading == isLoading));
+                other.isLoading == isLoading) &&
+            (identical(other.newUser, newUser) || other.newUser == newUser));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading);
+  int get hashCode => Object.hash(runtimeType, isLoading, newUser);
 
   @JsonKey(ignore: true)
   @override
@@ -124,11 +157,14 @@ class _$AddMemberStateImpl extends _AddMemberState {
 }
 
 abstract class _AddMemberState extends AddMemberState {
-  const factory _AddMemberState({final bool isLoading}) = _$AddMemberStateImpl;
+  const factory _AddMemberState(
+      {final bool isLoading, final UserModel? newUser}) = _$AddMemberStateImpl;
   const _AddMemberState._() : super._();
 
   @override
   bool get isLoading;
+  @override
+  UserModel? get newUser;
   @override
   @JsonKey(ignore: true)
   _$$AddMemberStateImplCopyWith<_$AddMemberStateImpl> get copyWith =>

@@ -145,11 +145,16 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
           .doc(newDeposit.depositId)
           .set(newDeposit.toJson());
 
+      state = state.copyWith(newUser: newUser);
+
       // Add the new user's ID to the current user's referredIds list
-      final currentUserRef = firestore.collection('users').doc(referredByUser);
-      await currentUserRef.update({
-        'referredIds': FieldValue.arrayUnion([newUserId]) 
-      });
+      if (referredByUser.isNotEmpty) {
+        final currentUserRef =
+            firestore.collection('users').doc(referredByUser);
+        await currentUserRef.update({
+          'referredIds': FieldValue.arrayUnion([newUserId])
+        });
+      }
 
       state = state.copyWith(isLoading: false);
       return true;

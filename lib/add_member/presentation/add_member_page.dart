@@ -35,7 +35,10 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
 
   @override
   Widget build(BuildContext context) {
-    final notifer = ref.read(AddMemberProvider.notifier);
+    final notifier = ref.read(AddMemberProvider.notifier);
+    final newUser =
+        ref.watch(AddMemberProvider).newUser; // Watching the new user state
+
     return Scaffold(
       appBar: AppBar(title: Text('Add New Member')),
       body: Padding(
@@ -115,26 +118,9 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                     return null;
                   },
                 ),
-                // SizedBox(height: 16),
-
-                // // Referral ID Field
-                // TextFormField(
-                //   controller: _referralIDController,
-                //   decoration: InputDecoration(
-                //     labelText: 'Referral ID',
-                //     border: OutlineInputBorder(),
-                //     prefixIcon: Icon(Icons.call_made_rounded),
-                //   ),
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Please enter the referral id';
-                //     }
-                //     return null;
-                //   },
-                // ),
                 SizedBox(height: 24),
 
-                //Deposit Amount
+                // Deposit Amount
                 TextFormField(
                   controller: _depositAmountController,
                   decoration: InputDecoration(
@@ -144,7 +130,7 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter the Depoisit Amount';
+                      return 'Please enter the Deposit Amount';
                     }
                     return null;
                   },
@@ -156,13 +142,21 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // Add member logic
-                      notifer.registerMember(
+                      notifier.registerMember(
                         name: _nameController.text,
                         phone: _phoneController.text,
                         email: _emailController.text,
                         panCard: _panCardController.text,
                         depositAmount: _depositAmountController.text,
                       );
+
+                      // Clear the form fields after submission
+                      _nameController.clear();
+                      _phoneController.clear();
+                      _emailController.clear();
+                      _panCardController.clear();
+                      _referralIDController.clear();
+                      _depositAmountController.clear();
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -170,6 +164,17 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                   ),
                   child: Text('Add Member'),
                 ),
+                SizedBox(height: 24),
+
+                // Show new user details after form submission
+                if (newUser != null) ...[
+                  Text('New User Details:'),
+                  SizedBox(height: 8),
+                  Text('Username: ${newUser.id}'),
+                  Text('Name: ${newUser.username}'),
+                  Text('Temporary passord: ${newUser.temporaryPassword}'),
+                  // Text('Deposit Amount: ${newUser.depositAmount}'),
+                ],
               ],
             ),
           ),
