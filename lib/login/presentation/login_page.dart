@@ -1,4 +1,3 @@
-// lib/presentation/pages/login_page.dart
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +9,10 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 @RoutePage()
 class LoginPage extends ConsumerStatefulWidget {
-  LoginPage();
+  const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  ConsumerState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
@@ -22,11 +21,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _passwordController = TextEditingController();
 
   @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authProvider.select((state) => state.isLoading));
+    // final isLoading = ref.watch(authProvider.select((state) => state.isLoading));
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -36,26 +42,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.all(32.0),
+              padding: const EdgeInsets.all(32.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     height: 250,
                     width: 150,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                    decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                     child: Image.asset(
                       'assets/images/grg.png',
                       scale: 2,
                     ),
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   Text(
                     'Welcome Member',
                     style: Theme.of(context).textTheme.titleLarge,
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   SizedBox(
                     width: kIsWeb ? 35.w : 90.w,
                     child: Form(
@@ -68,7 +74,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               labelText: 'Username',
                               prefixIcon: Icon(Icons.person, color: Theme.of(context).primaryColor),
                             ),
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your username';
@@ -76,7 +82,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           TextFormField(
                             controller: _passwordController,
                             decoration: InputDecoration(
@@ -84,7 +90,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               prefixIcon: Icon(Icons.lock, color: Theme.of(context).primaryColor),
                             ),
                             obscureText: true,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your password';
@@ -92,25 +98,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 24),
+                          const SizedBox(height: 24),
                           ElevatedButton(
                             onPressed: () async {
                               final stateNotifier = ref.read(authProvider.notifier);
-                              if (!isLoading) {
+                              if (_formKey.currentState!.validate()) {
                                 final res = await stateNotifier.signIn(
-                                  _usernameController.text,
-                                  _passwordController.text,
-                                );
+                                    _usernameController.text, _passwordController.text);
                                 if (stateNotifier.isFirstTime && res == false) {
                                   context.router.push(const UpdatePasswordRoute());
-                                } else if (stateNotifier.isFirstTime == false && res == true) {
+                                } else if (stateNotifier.isFirstTime == false && res) {
                                   context.router.push(const DashboardRoute());
                                 } else {
                                   await Fluttertoast.showToast(msg: 'Invalid Credentials');
                                 }
                               }
                             },
-                            child: Text('LOGIN', style: TextStyle(fontSize: 16)),
+                            child: const Text('LOGIN', style: TextStyle(fontSize: 16)),
                           ),
                         ],
                       ),

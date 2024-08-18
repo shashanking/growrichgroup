@@ -1,16 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:growrichgroup_dashboard/add_member/shared/provider.dart';
+import 'package:growrichgroup_dashboard/core/utils/upper_case_text_formatter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 @RoutePage()
 class AddMemberPage extends ConsumerStatefulWidget {
-  AddMemberPage();
+  const AddMemberPage({super.key});
 
   @override
-  _AddMemberPageState createState() => _AddMemberPageState();
+  ConsumerState createState() => _AddMemberPageState();
 }
 
 class _AddMemberPageState extends ConsumerState<AddMemberPage> {
@@ -21,6 +23,12 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
   final _panCardController = TextEditingController();
   final _referralIDController = TextEditingController();
   final _depositAmountController = TextEditingController();
+
+  final RegExp emailRegex = RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+  );
+
+  final RegExp pancardRegex = RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]$');
 
   @override
   void dispose() {
@@ -36,13 +44,12 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
   @override
   Widget build(BuildContext context) {
     final notifier = ref.read(AddMemberProvider.notifier);
-    final newUser =
-        ref.watch(AddMemberProvider).newUser; // Watching the new user state
+    final newUser = ref.watch(AddMemberProvider).newUser; // Watching the new user state
 
     return Scaffold(
-      appBar: AppBar(title: Text('Add New Member')),
+      appBar: AppBar(title: const Text('Add New Member')),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SizedBox(
           width: kIsWeb ? 30.w : 90.w,
           child: Form(
@@ -53,24 +60,28 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                 // Name Field
                 TextFormField(
                   controller: _nameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Name',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.person),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter the name';
+                      return 'Please enter your name';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Phone Number Field
                 TextFormField(
                   controller: _phoneController,
-                  decoration: InputDecoration(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10),
+                  ],
+                  decoration: const InputDecoration(
                     labelText: 'Phone Number',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.phone),
@@ -78,17 +89,19 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                   keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter the phone number';
+                      return 'Please enter your phone number';
+                    } else if (value.length < 10) {
+                      return 'Please enter a valid phone number';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Email ID Field
                 TextFormField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Email ID',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email),
@@ -96,17 +109,23 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter the email ID';
+                      return 'Please enter your email ID';
+                    } else if (!emailRegex.hasMatch(value)) {
+                      return 'Please enter a valid email ID';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // PAN Card Field
                 TextFormField(
                   controller: _panCardController,
-                  decoration: InputDecoration(
+                  inputFormatters: [
+                    UpperCaseTextFormatter(),
+                    LengthLimitingTextInputFormatter(10),
+                  ],
+                  decoration: const InputDecoration(
                     labelText: 'PAN Card',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.credit_card),
@@ -114,16 +133,18 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter the PAN card number';
+                    } else if (value.length < 10 || !pancardRegex.hasMatch(value)) {
+                      return 'Please enter a valid PAN card number';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Deposit Amount
                 TextFormField(
                   controller: _depositAmountController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Deposit Amount',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.money),
@@ -131,11 +152,13 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter the Deposit Amount';
+                    } else if (int.parse(_depositAmountController.text) < 5000) {
+                      return 'Deposit amount must be ₹5000 minimum.';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Add Member Button
                 ElevatedButton(
@@ -160,16 +183,16 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Text('Add Member'),
+                  child: const Text('Add Member'),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Show new user details after form submission
                 if (newUser != null) ...[
-                  Text('New User Details:'),
-                  SizedBox(height: 8),
+                  const Text('New User Details:'),
+                  const SizedBox(height: 8),
                   Text('Username: ${newUser.id}'),
                   Text('Name: ${newUser.username}'),
                   Text('Temporary passord: ${newUser.temporaryPassword}'),

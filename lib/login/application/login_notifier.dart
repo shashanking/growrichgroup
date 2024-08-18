@@ -1,39 +1,34 @@
-// auth_notifier.dart
-// ignore_for_file: unnecessary_const
-
 import 'dart:async';
-import 'dart:math';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:growrichgroup_dashboard/login/application/login_state.dart';
 import 'package:growrichgroup_dashboard/login/domain/i_auth_repository.dart';
-import 'package:growrichgroup_dashboard/login/domain/user_model.dart';
 import 'package:riverpod/riverpod.dart';
 
+// GG1000001
+// theamit41
+
 class AuthNotifier extends StateNotifier<LoginState> {
+  AuthNotifier(this._authRepository) : super(const LoginState());
+
   final IAuthRepository _authRepository;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isFirstTime = true;
+  bool isLoginValid = false;
   String userEmail = '';
   String userId = '';
-
-  AuthNotifier(this._authRepository) : super(const LoginState());
 
   Future<bool> signIn(String username, String password) async {
     state = state.copyWith(isLoading: true);
 
-    try {
-      final userSnapshot = await _firestore
-          .collection('users')
-          .where('id', isEqualTo: username)
-          // .limit(1)
-          .get();
+    isLoginValid = true;
 
-      print(userSnapshot.docs.first.data());
+    try {
+      final userSnapshot =
+          await _firestore.collection('users').where('id', isEqualTo: username).limit(1).get();
 
       if (userSnapshot.docs.isNotEmpty) {
         final userDoc = userSnapshot.docs.first;
@@ -41,7 +36,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
         isFirstTime = userDoc.data()['isFirstTime'] ?? true;
         userId = userDoc.data()['id'];
         userEmail = userDoc.data()['emailId'] ?? '';
-        final String temporaryPassword = userDoc.data()['temporaryPassword'];
+        // final String temporaryPassword = userDoc.data()['temporaryPassword'];
 
         if (isFirstTime) {
           // 2. If it's the user's first login, add them to the _authRepository
@@ -57,8 +52,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
           return false; // Indicate further action is required
         } else {
           //   // 4. If not the first login, authenticate the user
-          await _authRepository.signInWithUsernameAndPassword(
-              username, password);
+          await _authRepository.signInWithUsernameAndPassword(username, password);
           //   state = state.copyWith(
           //     isLoading: false,
           //     isAuthenticated: true,
@@ -80,8 +74,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
     }
   }
 
-  Future<void> updatePassword(
-      String password, VoidCallback voidCallBack) async {
+  Future<void> updatePassword(String password, VoidCallback voidCallBack) async {
     try {
       state = state.copyWith(isLoading: true);
 
@@ -94,7 +87,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
       voidCallBack.call();
       state = state.copyWith(isLoading: false);
     } catch (e) {
-      print(e);
+      // print(e);
       state = state.copyWith(isLoading: false);
     }
   }
