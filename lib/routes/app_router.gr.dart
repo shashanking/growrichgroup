@@ -9,6 +9,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i6;
+import 'package:flutter/foundation.dart' as _i7;
 import 'package:growrichgroup_dashboard/add_member/presentation/add_member_page.dart'
     as _i1;
 import 'package:growrichgroup_dashboard/base/presentation/base_screen.dart'
@@ -28,7 +29,7 @@ abstract class $AppRouter extends _i6.RootStackRouter {
     AddMemberRoute.name: (routeData) {
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i1.AddMemberPage(),
+        child: const _i1.AddMemberPage(),
       );
     },
     BaseRoute.name: (routeData) {
@@ -46,13 +47,17 @@ abstract class $AppRouter extends _i6.RootStackRouter {
     LoginRoute.name: (routeData) {
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i4.LoginPage(),
+        child: const _i4.LoginPage(),
       );
     },
     UpdatePasswordRoute.name: (routeData) {
+      final args = routeData.argsAs<UpdatePasswordRouteArgs>();
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i5.UpdatePasswordPage(),
+        child: _i5.UpdatePasswordPage(
+          key: args.key,
+          kid: args.kid,
+        ),
       );
     },
   };
@@ -116,14 +121,38 @@ class LoginRoute extends _i6.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i5.UpdatePasswordPage]
-class UpdatePasswordRoute extends _i6.PageRouteInfo<void> {
-  const UpdatePasswordRoute({List<_i6.PageRouteInfo>? children})
-      : super(
+class UpdatePasswordRoute extends _i6.PageRouteInfo<UpdatePasswordRouteArgs> {
+  UpdatePasswordRoute({
+    _i7.Key? key,
+    required String kid,
+    List<_i6.PageRouteInfo>? children,
+  }) : super(
           UpdatePasswordRoute.name,
+          args: UpdatePasswordRouteArgs(
+            key: key,
+            kid: kid,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'UpdatePasswordRoute';
 
-  static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
+  static const _i6.PageInfo<UpdatePasswordRouteArgs> page =
+      _i6.PageInfo<UpdatePasswordRouteArgs>(name);
+}
+
+class UpdatePasswordRouteArgs {
+  const UpdatePasswordRouteArgs({
+    this.key,
+    required this.kid,
+  });
+
+  final _i7.Key? key;
+
+  final String kid;
+
+  @override
+  String toString() {
+    return 'UpdatePasswordRouteArgs{key: $key, kid: $kid}';
+  }
 }

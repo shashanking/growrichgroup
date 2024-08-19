@@ -12,6 +12,8 @@ _$DepositModelImpl _$$DepositModelImplFromJson(Map<String, dynamic> json) =>
       depositId: json['depositId'] as String? ?? '',
       depositAmount: json['depositAmount'] as String? ?? '',
       depositorName: json['depositorName'] as String? ?? '',
+      createdAt: _dateTimeFromTimestamp(json['createdAt'] as Timestamp?),
+      updatedAt: _dateTimeFromTimestamp(json['updatedAt'] as Timestamp?),
     );
 
 Map<String, dynamic> _$$DepositModelImplToJson(_$DepositModelImpl instance) =>
@@ -20,4 +22,6 @@ Map<String, dynamic> _$$DepositModelImplToJson(_$DepositModelImpl instance) =>
       'depositId': instance.depositId,
       'depositAmount': instance.depositAmount,
       'depositorName': instance.depositorName,
+      'createdAt': _dateTimeToTimestamp(instance.createdAt),
+      'updatedAt': _dateTimeToTimestamp(instance.updatedAt),
     };

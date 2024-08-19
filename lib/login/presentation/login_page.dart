@@ -106,7 +106,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 final res = await stateNotifier.signIn(
                                     _usernameController.text, _passwordController.text);
                                 if (stateNotifier.isFirstTime && res == false) {
-                                  context.router.push(const UpdatePasswordRoute());
+                                  context.router.push(UpdatePasswordRoute(kid: _usernameController.text));
                                 } else if (stateNotifier.isFirstTime == false && res) {
                                   context.router.push(const DashboardRoute());
                                 } else {

@@ -76,7 +76,6 @@ class FirebaseAuthRepository implements IAuthRepository {
 
       final UserModel user = UserModel(
         username: username,
-        wallet: const WalletModel(),
         id: userCredential.user!.uid,
         pan: referralCode,
       );
@@ -86,7 +85,7 @@ class FirebaseAuthRepository implements IAuthRepository {
         'phoneNumber': user.phoneNumber,
         'email': userCredential.user!.email,
         'isVerified': user.isVerified,
-        'wallet': user.wallet.toJson(),
+        // 'wallet': user.wallet.toJson(),
         'id': user.id,
         'referralCode': referralCode,
         'referredBy': refferedBy,

@@ -10,13 +10,13 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 @RoutePage()
 class UpdatePasswordPage extends ConsumerStatefulWidget {
-  UpdatePasswordPage();
-
+  UpdatePasswordPage({super.key, required this.kid});
+  final String kid;
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _UpdatePasswordState createState() => _UpdatePasswordState();
 }
 
-class _LoginPageState extends ConsumerState<UpdatePasswordPage> {
+class _UpdatePasswordState extends ConsumerState<UpdatePasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final _tempPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
@@ -24,7 +24,8 @@ class _LoginPageState extends ConsumerState<UpdatePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authProvider.select((state) => state.isLoading));
+    final isLoading =
+        ref.watch(authProvider.select((state) => state.isLoading));
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -44,7 +45,8 @@ class _LoginPageState extends ConsumerState<UpdatePasswordPage> {
                   Container(
                     height: 250,
                     width: 150,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.white),
                     child: Image.asset(
                       'assets/images/grg.png',
                       scale: 2,
@@ -67,7 +69,8 @@ class _LoginPageState extends ConsumerState<UpdatePasswordPage> {
                             controller: _tempPasswordController,
                             decoration: InputDecoration(
                               labelText: 'Temporary Password',
-                              prefixIcon: Icon(Icons.lock, color: Theme.of(context).primaryColor),
+                              prefixIcon: Icon(Icons.lock,
+                                  color: Theme.of(context).primaryColor),
                             ),
                             style: TextStyle(color: Colors.white),
                             validator: (value) {
@@ -82,7 +85,8 @@ class _LoginPageState extends ConsumerState<UpdatePasswordPage> {
                             controller: _newPasswordController,
                             decoration: InputDecoration(
                               labelText: 'New Password',
-                              prefixIcon: Icon(Icons.lock, color: Theme.of(context).primaryColor),
+                              prefixIcon: Icon(Icons.lock,
+                                  color: Theme.of(context).primaryColor),
                             ),
                             obscureText: true,
                             style: TextStyle(color: Colors.white),
@@ -98,7 +102,8 @@ class _LoginPageState extends ConsumerState<UpdatePasswordPage> {
                             controller: _confirmPasswordController,
                             decoration: InputDecoration(
                               labelText: 'Confirm Password',
-                              prefixIcon: Icon(Icons.lock, color: Theme.of(context).primaryColor),
+                              prefixIcon: Icon(Icons.lock,
+                                  color: Theme.of(context).primaryColor),
                             ),
                             obscureText: true,
                             style: TextStyle(color: Colors.white),
@@ -114,11 +119,13 @@ class _LoginPageState extends ConsumerState<UpdatePasswordPage> {
                             onPressed: () async {
                               await ref
                                   .read(authProvider.notifier)
-                                  .updatePassword(_confirmPasswordController.text, () {
+                                  .updatePassword(
+                                      widget.kid, _confirmPasswordController.text, () {
                                 context.pushRoute(const DashboardRoute());
                               });
                             },
-                            child: Text('Update Password', style: TextStyle(fontSize: 16)),
+                            child: Text('Update Password',
+                                style: TextStyle(fontSize: 16)),
                           ),
                         ],
                       ),

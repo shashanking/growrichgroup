@@ -25,15 +25,18 @@ mixin _$UserModel {
   String get username => throw _privateConstructorUsedError;
   String get phoneNumber => throw _privateConstructorUsedError;
   String get emailId => throw _privateConstructorUsedError;
-  String get depositId => throw _privateConstructorUsedError;
+  List<String> get depositId => throw _privateConstructorUsedError;
   String get temporaryPassword => throw _privateConstructorUsedError;
-  String get depositAmount => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
   bool get isFirstTime => throw _privateConstructorUsedError;
-  String? get pan => throw _privateConstructorUsedError;
-  WalletModel get wallet => throw _privateConstructorUsedError;
+  String get pan => throw _privateConstructorUsedError;
+  List<IncomeModel> get incomes => throw _privateConstructorUsedError;
   String get referredBy => throw _privateConstructorUsedError;
   List<String> get referredIds => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -52,17 +55,18 @@ abstract class $UserModelCopyWith<$Res> {
       String username,
       String phoneNumber,
       String emailId,
-      String depositId,
+      List<String> depositId,
       String temporaryPassword,
-      String depositAmount,
       bool isVerified,
       bool isFirstTime,
-      String? pan,
-      WalletModel wallet,
+      String pan,
+      List<IncomeModel> incomes,
       String referredBy,
-      List<String> referredIds});
-
-  $WalletModelCopyWith<$Res> get wallet;
+      List<String> referredIds,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -85,13 +89,14 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? emailId = null,
     Object? depositId = null,
     Object? temporaryPassword = null,
-    Object? depositAmount = null,
     Object? isVerified = null,
     Object? isFirstTime = null,
-    Object? pan = freezed,
-    Object? wallet = null,
+    Object? pan = null,
+    Object? incomes = null,
     Object? referredBy = null,
     Object? referredIds = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -117,14 +122,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
       depositId: null == depositId
           ? _value.depositId
           : depositId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as List<String>,
       temporaryPassword: null == temporaryPassword
           ? _value.temporaryPassword
           : temporaryPassword // ignore: cast_nullable_to_non_nullable
-              as String,
-      depositAmount: null == depositAmount
-          ? _value.depositAmount
-          : depositAmount // ignore: cast_nullable_to_non_nullable
               as String,
       isVerified: null == isVerified
           ? _value.isVerified
@@ -134,14 +135,14 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.isFirstTime
           : isFirstTime // ignore: cast_nullable_to_non_nullable
               as bool,
-      pan: freezed == pan
+      pan: null == pan
           ? _value.pan
           : pan // ignore: cast_nullable_to_non_nullable
-              as String?,
-      wallet: null == wallet
-          ? _value.wallet
-          : wallet // ignore: cast_nullable_to_non_nullable
-              as WalletModel,
+              as String,
+      incomes: null == incomes
+          ? _value.incomes
+          : incomes // ignore: cast_nullable_to_non_nullable
+              as List<IncomeModel>,
       referredBy: null == referredBy
           ? _value.referredBy
           : referredBy // ignore: cast_nullable_to_non_nullable
@@ -150,15 +151,15 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.referredIds
           : referredIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $WalletModelCopyWith<$Res> get wallet {
-    return $WalletModelCopyWith<$Res>(_value.wallet, (value) {
-      return _then(_value.copyWith(wallet: value) as $Val);
-    });
   }
 }
 
@@ -176,18 +177,18 @@ abstract class _$$UserModelImplCopyWith<$Res>
       String username,
       String phoneNumber,
       String emailId,
-      String depositId,
+      List<String> depositId,
       String temporaryPassword,
-      String depositAmount,
       bool isVerified,
       bool isFirstTime,
-      String? pan,
-      WalletModel wallet,
+      String pan,
+      List<IncomeModel> incomes,
       String referredBy,
-      List<String> referredIds});
-
-  @override
-  $WalletModelCopyWith<$Res> get wallet;
+      List<String> referredIds,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -208,13 +209,14 @@ class __$$UserModelImplCopyWithImpl<$Res>
     Object? emailId = null,
     Object? depositId = null,
     Object? temporaryPassword = null,
-    Object? depositAmount = null,
     Object? isVerified = null,
     Object? isFirstTime = null,
-    Object? pan = freezed,
-    Object? wallet = null,
+    Object? pan = null,
+    Object? incomes = null,
     Object? referredBy = null,
     Object? referredIds = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_$UserModelImpl(
       id: null == id
@@ -238,16 +240,12 @@ class __$$UserModelImplCopyWithImpl<$Res>
           : emailId // ignore: cast_nullable_to_non_nullable
               as String,
       depositId: null == depositId
-          ? _value.depositId
+          ? _value._depositId
           : depositId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as List<String>,
       temporaryPassword: null == temporaryPassword
           ? _value.temporaryPassword
           : temporaryPassword // ignore: cast_nullable_to_non_nullable
-              as String,
-      depositAmount: null == depositAmount
-          ? _value.depositAmount
-          : depositAmount // ignore: cast_nullable_to_non_nullable
               as String,
       isVerified: null == isVerified
           ? _value.isVerified
@@ -257,14 +255,14 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.isFirstTime
           : isFirstTime // ignore: cast_nullable_to_non_nullable
               as bool,
-      pan: freezed == pan
+      pan: null == pan
           ? _value.pan
           : pan // ignore: cast_nullable_to_non_nullable
-              as String?,
-      wallet: null == wallet
-          ? _value.wallet
-          : wallet // ignore: cast_nullable_to_non_nullable
-              as WalletModel,
+              as String,
+      incomes: null == incomes
+          ? _value._incomes
+          : incomes // ignore: cast_nullable_to_non_nullable
+              as List<IncomeModel>,
       referredBy: null == referredBy
           ? _value.referredBy
           : referredBy // ignore: cast_nullable_to_non_nullable
@@ -273,6 +271,14 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value._referredIds
           : referredIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -281,22 +287,27 @@ class __$$UserModelImplCopyWithImpl<$Res>
 
 @JsonSerializable(explicitToJson: true)
 class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
-  const _$UserModelImpl(
+  _$UserModelImpl(
       {this.id = '',
       this.uid = '',
       this.username = '',
       this.phoneNumber = '',
       this.emailId = '',
-      this.depositId = '',
+      final List<String> depositId = const [],
       this.temporaryPassword = '123456',
-      this.depositAmount = '',
       this.isVerified = false,
       this.isFirstTime = true,
       this.pan = '',
-      required this.wallet,
+      final List<IncomeModel> incomes = const [],
       this.referredBy = '',
-      final List<String> referredIds = const []})
-      : _referredIds = referredIds;
+      final List<String> referredIds = const [],
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      this.createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      this.updatedAt})
+      : _depositId = depositId,
+        _incomes = incomes,
+        _referredIds = referredIds;
 
   factory _$UserModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserModelImplFromJson(json);
@@ -316,15 +327,18 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
   @override
   @JsonKey()
   final String emailId;
+  final List<String> _depositId;
   @override
   @JsonKey()
-  final String depositId;
+  List<String> get depositId {
+    if (_depositId is EqualUnmodifiableListView) return _depositId;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_depositId);
+  }
+
   @override
   @JsonKey()
   final String temporaryPassword;
-  @override
-  @JsonKey()
-  final String depositAmount;
   @override
   @JsonKey()
   final bool isVerified;
@@ -333,9 +347,16 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
   final bool isFirstTime;
   @override
   @JsonKey()
-  final String? pan;
+  final String pan;
+  final List<IncomeModel> _incomes;
   @override
-  final WalletModel wallet;
+  @JsonKey()
+  List<IncomeModel> get incomes {
+    if (_incomes is EqualUnmodifiableListView) return _incomes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_incomes);
+  }
+
   @override
   @JsonKey()
   final String referredBy;
@@ -349,8 +370,15 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
   }
 
   @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  final DateTime? createdAt;
+  @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  final DateTime? updatedAt;
+
+  @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserModel(id: $id, uid: $uid, username: $username, phoneNumber: $phoneNumber, emailId: $emailId, depositId: $depositId, temporaryPassword: $temporaryPassword, depositAmount: $depositAmount, isVerified: $isVerified, isFirstTime: $isFirstTime, pan: $pan, wallet: $wallet, referredBy: $referredBy, referredIds: $referredIds)';
+    return 'UserModel(id: $id, uid: $uid, username: $username, phoneNumber: $phoneNumber, emailId: $emailId, depositId: $depositId, temporaryPassword: $temporaryPassword, isVerified: $isVerified, isFirstTime: $isFirstTime, pan: $pan, incomes: $incomes, referredBy: $referredBy, referredIds: $referredIds, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -365,13 +393,14 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
       ..add(DiagnosticsProperty('emailId', emailId))
       ..add(DiagnosticsProperty('depositId', depositId))
       ..add(DiagnosticsProperty('temporaryPassword', temporaryPassword))
-      ..add(DiagnosticsProperty('depositAmount', depositAmount))
       ..add(DiagnosticsProperty('isVerified', isVerified))
       ..add(DiagnosticsProperty('isFirstTime', isFirstTime))
       ..add(DiagnosticsProperty('pan', pan))
-      ..add(DiagnosticsProperty('wallet', wallet))
+      ..add(DiagnosticsProperty('incomes', incomes))
       ..add(DiagnosticsProperty('referredBy', referredBy))
-      ..add(DiagnosticsProperty('referredIds', referredIds));
+      ..add(DiagnosticsProperty('referredIds', referredIds))
+      ..add(DiagnosticsProperty('createdAt', createdAt))
+      ..add(DiagnosticsProperty('updatedAt', updatedAt));
   }
 
   @override
@@ -386,22 +415,24 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.emailId, emailId) || other.emailId == emailId) &&
-            (identical(other.depositId, depositId) ||
-                other.depositId == depositId) &&
+            const DeepCollectionEquality()
+                .equals(other._depositId, _depositId) &&
             (identical(other.temporaryPassword, temporaryPassword) ||
                 other.temporaryPassword == temporaryPassword) &&
-            (identical(other.depositAmount, depositAmount) ||
-                other.depositAmount == depositAmount) &&
             (identical(other.isVerified, isVerified) ||
                 other.isVerified == isVerified) &&
             (identical(other.isFirstTime, isFirstTime) ||
                 other.isFirstTime == isFirstTime) &&
             (identical(other.pan, pan) || other.pan == pan) &&
-            (identical(other.wallet, wallet) || other.wallet == wallet) &&
+            const DeepCollectionEquality().equals(other._incomes, _incomes) &&
             (identical(other.referredBy, referredBy) ||
                 other.referredBy == referredBy) &&
             const DeepCollectionEquality()
-                .equals(other._referredIds, _referredIds));
+                .equals(other._referredIds, _referredIds) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(ignore: true)
@@ -413,15 +444,16 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
       username,
       phoneNumber,
       emailId,
-      depositId,
+      const DeepCollectionEquality().hash(_depositId),
       temporaryPassword,
-      depositAmount,
       isVerified,
       isFirstTime,
       pan,
-      wallet,
+      const DeepCollectionEquality().hash(_incomes),
       referredBy,
-      const DeepCollectionEquality().hash(_referredIds));
+      const DeepCollectionEquality().hash(_referredIds),
+      createdAt,
+      updatedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -438,21 +470,24 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
 }
 
 abstract class _UserModel implements UserModel {
-  const factory _UserModel(
+  factory _UserModel(
       {final String id,
       final String uid,
       final String username,
       final String phoneNumber,
       final String emailId,
-      final String depositId,
+      final List<String> depositId,
       final String temporaryPassword,
-      final String depositAmount,
       final bool isVerified,
       final bool isFirstTime,
-      final String? pan,
-      required final WalletModel wallet,
+      final String pan,
+      final List<IncomeModel> incomes,
       final String referredBy,
-      final List<String> referredIds}) = _$UserModelImpl;
+      final List<String> referredIds,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      final DateTime? createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      final DateTime? updatedAt}) = _$UserModelImpl;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$UserModelImpl.fromJson;
@@ -468,26 +503,286 @@ abstract class _UserModel implements UserModel {
   @override
   String get emailId;
   @override
-  String get depositId;
+  List<String> get depositId;
   @override
   String get temporaryPassword;
-  @override
-  String get depositAmount;
   @override
   bool get isVerified;
   @override
   bool get isFirstTime;
   @override
-  String? get pan;
+  String get pan;
   @override
-  WalletModel get wallet;
+  List<IncomeModel> get incomes;
   @override
   String get referredBy;
   @override
   List<String> get referredIds;
   @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get createdAt;
+  @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get updatedAt;
+  @override
   @JsonKey(ignore: true)
   _$$UserModelImplCopyWith<_$UserModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+IncomeModel _$IncomeModelFromJson(Map<String, dynamic> json) {
+  return _IncomeModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$IncomeModel {
+  String get incomeId => throw _privateConstructorUsedError;
+  String get depositId => throw _privateConstructorUsedError;
+  String get incomeType => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $IncomeModelCopyWith<IncomeModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $IncomeModelCopyWith<$Res> {
+  factory $IncomeModelCopyWith(
+          IncomeModel value, $Res Function(IncomeModel) then) =
+      _$IncomeModelCopyWithImpl<$Res, IncomeModel>;
+  @useResult
+  $Res call(
+      {String incomeId,
+      String depositId,
+      String incomeType,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? updatedAt});
+}
+
+/// @nodoc
+class _$IncomeModelCopyWithImpl<$Res, $Val extends IncomeModel>
+    implements $IncomeModelCopyWith<$Res> {
+  _$IncomeModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? incomeId = null,
+    Object? depositId = null,
+    Object? incomeType = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
+  }) {
+    return _then(_value.copyWith(
+      incomeId: null == incomeId
+          ? _value.incomeId
+          : incomeId // ignore: cast_nullable_to_non_nullable
+              as String,
+      depositId: null == depositId
+          ? _value.depositId
+          : depositId // ignore: cast_nullable_to_non_nullable
+              as String,
+      incomeType: null == incomeType
+          ? _value.incomeType
+          : incomeType // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$IncomeModelImplCopyWith<$Res>
+    implements $IncomeModelCopyWith<$Res> {
+  factory _$$IncomeModelImplCopyWith(
+          _$IncomeModelImpl value, $Res Function(_$IncomeModelImpl) then) =
+      __$$IncomeModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String incomeId,
+      String depositId,
+      String incomeType,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? updatedAt});
+}
+
+/// @nodoc
+class __$$IncomeModelImplCopyWithImpl<$Res>
+    extends _$IncomeModelCopyWithImpl<$Res, _$IncomeModelImpl>
+    implements _$$IncomeModelImplCopyWith<$Res> {
+  __$$IncomeModelImplCopyWithImpl(
+      _$IncomeModelImpl _value, $Res Function(_$IncomeModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? incomeId = null,
+    Object? depositId = null,
+    Object? incomeType = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
+  }) {
+    return _then(_$IncomeModelImpl(
+      incomeId: null == incomeId
+          ? _value.incomeId
+          : incomeId // ignore: cast_nullable_to_non_nullable
+              as String,
+      depositId: null == depositId
+          ? _value.depositId
+          : depositId // ignore: cast_nullable_to_non_nullable
+              as String,
+      incomeType: null == incomeType
+          ? _value.incomeType
+          : incomeType // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
+  }
+}
+
+/// @nodoc
+
+@JsonSerializable(explicitToJson: true)
+class _$IncomeModelImpl with DiagnosticableTreeMixin implements _IncomeModel {
+  _$IncomeModelImpl(
+      {this.incomeId = '',
+      this.depositId = '',
+      this.incomeType = '',
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      this.createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      this.updatedAt});
+
+  factory _$IncomeModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$IncomeModelImplFromJson(json);
+
+  @override
+  @JsonKey()
+  final String incomeId;
+  @override
+  @JsonKey()
+  final String depositId;
+  @override
+  @JsonKey()
+  final String incomeType;
+  @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  final DateTime? createdAt;
+  @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  final DateTime? updatedAt;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'IncomeModel(incomeId: $incomeId, depositId: $depositId, incomeType: $incomeType, createdAt: $createdAt, updatedAt: $updatedAt)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'IncomeModel'))
+      ..add(DiagnosticsProperty('incomeId', incomeId))
+      ..add(DiagnosticsProperty('depositId', depositId))
+      ..add(DiagnosticsProperty('incomeType', incomeType))
+      ..add(DiagnosticsProperty('createdAt', createdAt))
+      ..add(DiagnosticsProperty('updatedAt', updatedAt));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$IncomeModelImpl &&
+            (identical(other.incomeId, incomeId) ||
+                other.incomeId == incomeId) &&
+            (identical(other.depositId, depositId) ||
+                other.depositId == depositId) &&
+            (identical(other.incomeType, incomeType) ||
+                other.incomeType == incomeType) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, incomeId, depositId, incomeType, createdAt, updatedAt);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$IncomeModelImplCopyWith<_$IncomeModelImpl> get copyWith =>
+      __$$IncomeModelImplCopyWithImpl<_$IncomeModelImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$IncomeModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _IncomeModel implements IncomeModel {
+  factory _IncomeModel(
+      {final String incomeId,
+      final String depositId,
+      final String incomeType,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      final DateTime? createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      final DateTime? updatedAt}) = _$IncomeModelImpl;
+
+  factory _IncomeModel.fromJson(Map<String, dynamic> json) =
+      _$IncomeModelImpl.fromJson;
+
+  @override
+  String get incomeId;
+  @override
+  String get depositId;
+  @override
+  String get incomeType;
+  @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get createdAt;
+  @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get updatedAt;
+  @override
+  @JsonKey(ignore: true)
+  _$$IncomeModelImplCopyWith<_$IncomeModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

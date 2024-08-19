@@ -13,18 +13,25 @@ _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
       username: json['username'] as String? ?? '',
       phoneNumber: json['phoneNumber'] as String? ?? '',
       emailId: json['emailId'] as String? ?? '',
-      depositId: json['depositId'] as String? ?? '',
+      depositId: (json['depositId'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       temporaryPassword: json['temporaryPassword'] as String? ?? '123456',
-      depositAmount: json['depositAmount'] as String? ?? '',
       isVerified: json['isVerified'] as bool? ?? false,
       isFirstTime: json['isFirstTime'] as bool? ?? true,
       pan: json['pan'] as String? ?? '',
-      wallet: WalletModel.fromJson(json['wallet'] as Map<String, dynamic>),
+      incomes: (json['incomes'] as List<dynamic>?)
+              ?.map((e) => IncomeModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       referredBy: json['referredBy'] as String? ?? '',
       referredIds: (json['referredIds'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      createdAt: _dateTimeFromTimestamp(json['createdAt'] as Timestamp?),
+      updatedAt: _dateTimeFromTimestamp(json['updatedAt'] as Timestamp?),
     );
 
 Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
@@ -36,13 +43,32 @@ Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
       'emailId': instance.emailId,
       'depositId': instance.depositId,
       'temporaryPassword': instance.temporaryPassword,
-      'depositAmount': instance.depositAmount,
       'isVerified': instance.isVerified,
       'isFirstTime': instance.isFirstTime,
       'pan': instance.pan,
-      'wallet': instance.wallet.toJson(),
+      'incomes': instance.incomes.map((e) => e.toJson()).toList(),
       'referredBy': instance.referredBy,
       'referredIds': instance.referredIds,
+      'createdAt': _dateTimeToTimestamp(instance.createdAt),
+      'updatedAt': _dateTimeToTimestamp(instance.updatedAt),
+    };
+
+_$IncomeModelImpl _$$IncomeModelImplFromJson(Map<String, dynamic> json) =>
+    _$IncomeModelImpl(
+      incomeId: json['incomeId'] as String? ?? '',
+      depositId: json['depositId'] as String? ?? '',
+      incomeType: json['incomeType'] as String? ?? '',
+      createdAt: _dateTimeFromTimestamp(json['createdAt'] as Timestamp?),
+      updatedAt: _dateTimeFromTimestamp(json['updatedAt'] as Timestamp?),
+    );
+
+Map<String, dynamic> _$$IncomeModelImplToJson(_$IncomeModelImpl instance) =>
+    <String, dynamic>{
+      'incomeId': instance.incomeId,
+      'depositId': instance.depositId,
+      'incomeType': instance.incomeType,
+      'createdAt': _dateTimeToTimestamp(instance.createdAt),
+      'updatedAt': _dateTimeToTimestamp(instance.updatedAt),
     };
 
 _$WalletModelImpl _$$WalletModelImplFromJson(Map<String, dynamic> json) =>

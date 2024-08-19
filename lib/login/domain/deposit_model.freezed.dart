@@ -24,6 +24,10 @@ mixin _$DepositModel {
   String get depositId => throw _privateConstructorUsedError;
   String get depositAmount => throw _privateConstructorUsedError;
   String get depositorName => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +45,11 @@ abstract class $DepositModelCopyWith<$Res> {
       {String id,
       String depositId,
       String depositAmount,
-      String depositorName});
+      String depositorName,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -61,6 +69,8 @@ class _$DepositModelCopyWithImpl<$Res, $Val extends DepositModel>
     Object? depositId = null,
     Object? depositAmount = null,
     Object? depositorName = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -79,6 +89,14 @@ class _$DepositModelCopyWithImpl<$Res, $Val extends DepositModel>
           ? _value.depositorName
           : depositorName // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -95,7 +113,11 @@ abstract class _$$DepositModelImplCopyWith<$Res>
       {String id,
       String depositId,
       String depositAmount,
-      String depositorName});
+      String depositorName,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -113,6 +135,8 @@ class __$$DepositModelImplCopyWithImpl<$Res>
     Object? depositId = null,
     Object? depositAmount = null,
     Object? depositorName = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_$DepositModelImpl(
       id: null == id
@@ -131,6 +155,14 @@ class __$$DepositModelImplCopyWithImpl<$Res>
           ? _value.depositorName
           : depositorName // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -143,7 +175,11 @@ class _$DepositModelImpl implements _DepositModel {
       {this.id = '',
       this.depositId = '',
       this.depositAmount = '',
-      this.depositorName = ''});
+      this.depositorName = '',
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      this.createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      this.updatedAt});
 
   factory _$DepositModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$DepositModelImplFromJson(json);
@@ -160,10 +196,16 @@ class _$DepositModelImpl implements _DepositModel {
   @override
   @JsonKey()
   final String depositorName;
+  @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  final DateTime? createdAt;
+  @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  final DateTime? updatedAt;
 
   @override
   String toString() {
-    return 'DepositModel(id: $id, depositId: $depositId, depositAmount: $depositAmount, depositorName: $depositorName)';
+    return 'DepositModel(id: $id, depositId: $depositId, depositAmount: $depositAmount, depositorName: $depositorName, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -177,13 +219,17 @@ class _$DepositModelImpl implements _DepositModel {
             (identical(other.depositAmount, depositAmount) ||
                 other.depositAmount == depositAmount) &&
             (identical(other.depositorName, depositorName) ||
-                other.depositorName == depositorName));
+                other.depositorName == depositorName) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, depositId, depositAmount, depositorName);
+  int get hashCode => Object.hash(runtimeType, id, depositId, depositAmount,
+      depositorName, createdAt, updatedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -204,7 +250,11 @@ abstract class _DepositModel implements DepositModel {
       {final String id,
       final String depositId,
       final String depositAmount,
-      final String depositorName}) = _$DepositModelImpl;
+      final String depositorName,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      final DateTime? createdAt,
+      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+      final DateTime? updatedAt}) = _$DepositModelImpl;
 
   factory _DepositModel.fromJson(Map<String, dynamic> json) =
       _$DepositModelImpl.fromJson;
@@ -217,6 +267,12 @@ abstract class _DepositModel implements DepositModel {
   String get depositAmount;
   @override
   String get depositorName;
+  @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get createdAt;
+  @override
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+  DateTime? get updatedAt;
   @override
   @JsonKey(ignore: true)
   _$$DepositModelImplCopyWith<_$DepositModelImpl> get copyWith =>
