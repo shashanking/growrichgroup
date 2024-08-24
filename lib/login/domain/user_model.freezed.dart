@@ -21,7 +21,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserModel {
   String get id => throw _privateConstructorUsedError;
-  String get uid => throw _privateConstructorUsedError;
+  String? get uid => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
   String get phoneNumber => throw _privateConstructorUsedError;
   String get emailId => throw _privateConstructorUsedError;
@@ -30,9 +30,9 @@ mixin _$UserModel {
   bool get isVerified => throw _privateConstructorUsedError;
   bool get isFirstTime => throw _privateConstructorUsedError;
   String get pan => throw _privateConstructorUsedError;
-  List<IncomeModel> get incomes => throw _privateConstructorUsedError;
+  List<IncomeModel>? get interests => throw _privateConstructorUsedError;
   String get referredBy => throw _privateConstructorUsedError;
-  List<String> get referredIds => throw _privateConstructorUsedError;
+  List<String>? get referredIds => throw _privateConstructorUsedError;
   @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
   DateTime? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
@@ -51,7 +51,7 @@ abstract class $UserModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String uid,
+      String? uid,
       String username,
       String phoneNumber,
       String emailId,
@@ -60,9 +60,9 @@ abstract class $UserModelCopyWith<$Res> {
       bool isVerified,
       bool isFirstTime,
       String pan,
-      List<IncomeModel> incomes,
+      List<IncomeModel>? interests,
       String referredBy,
-      List<String> referredIds,
+      List<String>? referredIds,
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
       DateTime? createdAt,
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
@@ -83,7 +83,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   @override
   $Res call({
     Object? id = null,
-    Object? uid = null,
+    Object? uid = freezed,
     Object? username = null,
     Object? phoneNumber = null,
     Object? emailId = null,
@@ -92,9 +92,9 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? isVerified = null,
     Object? isFirstTime = null,
     Object? pan = null,
-    Object? incomes = null,
+    Object? interests = freezed,
     Object? referredBy = null,
-    Object? referredIds = null,
+    Object? referredIds = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -103,10 +103,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      uid: null == uid
+      uid: freezed == uid
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -139,18 +139,18 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.pan
           : pan // ignore: cast_nullable_to_non_nullable
               as String,
-      incomes: null == incomes
-          ? _value.incomes
-          : incomes // ignore: cast_nullable_to_non_nullable
-              as List<IncomeModel>,
+      interests: freezed == interests
+          ? _value.interests
+          : interests // ignore: cast_nullable_to_non_nullable
+              as List<IncomeModel>?,
       referredBy: null == referredBy
           ? _value.referredBy
           : referredBy // ignore: cast_nullable_to_non_nullable
               as String,
-      referredIds: null == referredIds
+      referredIds: freezed == referredIds
           ? _value.referredIds
           : referredIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -173,7 +173,7 @@ abstract class _$$UserModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      String uid,
+      String? uid,
       String username,
       String phoneNumber,
       String emailId,
@@ -182,9 +182,9 @@ abstract class _$$UserModelImplCopyWith<$Res>
       bool isVerified,
       bool isFirstTime,
       String pan,
-      List<IncomeModel> incomes,
+      List<IncomeModel>? interests,
       String referredBy,
-      List<String> referredIds,
+      List<String>? referredIds,
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
       DateTime? createdAt,
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
@@ -203,7 +203,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? uid = null,
+    Object? uid = freezed,
     Object? username = null,
     Object? phoneNumber = null,
     Object? emailId = null,
@@ -212,9 +212,9 @@ class __$$UserModelImplCopyWithImpl<$Res>
     Object? isVerified = null,
     Object? isFirstTime = null,
     Object? pan = null,
-    Object? incomes = null,
+    Object? interests = freezed,
     Object? referredBy = null,
-    Object? referredIds = null,
+    Object? referredIds = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -223,10 +223,10 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      uid: null == uid
+      uid: freezed == uid
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -259,18 +259,18 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.pan
           : pan // ignore: cast_nullable_to_non_nullable
               as String,
-      incomes: null == incomes
-          ? _value._incomes
-          : incomes // ignore: cast_nullable_to_non_nullable
-              as List<IncomeModel>,
+      interests: freezed == interests
+          ? _value._interests
+          : interests // ignore: cast_nullable_to_non_nullable
+              as List<IncomeModel>?,
       referredBy: null == referredBy
           ? _value.referredBy
           : referredBy // ignore: cast_nullable_to_non_nullable
               as String,
-      referredIds: null == referredIds
+      referredIds: freezed == referredIds
           ? _value._referredIds
           : referredIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -298,15 +298,15 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
       this.isVerified = false,
       this.isFirstTime = true,
       this.pan = '',
-      final List<IncomeModel> incomes = const [],
+      final List<IncomeModel>? interests = const [],
       this.referredBy = '',
-      final List<String> referredIds = const [],
+      final List<String>? referredIds = const [],
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
       this.createdAt,
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
       this.updatedAt})
       : _depositId = depositId,
-        _incomes = incomes,
+        _interests = interests,
         _referredIds = referredIds;
 
   factory _$UserModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -317,7 +317,7 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
   final String id;
   @override
   @JsonKey()
-  final String uid;
+  final String? uid;
   @override
   @JsonKey()
   final String username;
@@ -348,25 +348,29 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
   @override
   @JsonKey()
   final String pan;
-  final List<IncomeModel> _incomes;
+  final List<IncomeModel>? _interests;
   @override
   @JsonKey()
-  List<IncomeModel> get incomes {
-    if (_incomes is EqualUnmodifiableListView) return _incomes;
+  List<IncomeModel>? get interests {
+    final value = _interests;
+    if (value == null) return null;
+    if (_interests is EqualUnmodifiableListView) return _interests;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_incomes);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
   @JsonKey()
   final String referredBy;
-  final List<String> _referredIds;
+  final List<String>? _referredIds;
   @override
   @JsonKey()
-  List<String> get referredIds {
+  List<String>? get referredIds {
+    final value = _referredIds;
+    if (value == null) return null;
     if (_referredIds is EqualUnmodifiableListView) return _referredIds;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_referredIds);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -378,7 +382,7 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserModel(id: $id, uid: $uid, username: $username, phoneNumber: $phoneNumber, emailId: $emailId, depositId: $depositId, temporaryPassword: $temporaryPassword, isVerified: $isVerified, isFirstTime: $isFirstTime, pan: $pan, incomes: $incomes, referredBy: $referredBy, referredIds: $referredIds, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'UserModel(id: $id, uid: $uid, username: $username, phoneNumber: $phoneNumber, emailId: $emailId, depositId: $depositId, temporaryPassword: $temporaryPassword, isVerified: $isVerified, isFirstTime: $isFirstTime, pan: $pan, interests: $interests, referredBy: $referredBy, referredIds: $referredIds, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -396,7 +400,7 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
       ..add(DiagnosticsProperty('isVerified', isVerified))
       ..add(DiagnosticsProperty('isFirstTime', isFirstTime))
       ..add(DiagnosticsProperty('pan', pan))
-      ..add(DiagnosticsProperty('incomes', incomes))
+      ..add(DiagnosticsProperty('interests', interests))
       ..add(DiagnosticsProperty('referredBy', referredBy))
       ..add(DiagnosticsProperty('referredIds', referredIds))
       ..add(DiagnosticsProperty('createdAt', createdAt))
@@ -424,7 +428,8 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
             (identical(other.isFirstTime, isFirstTime) ||
                 other.isFirstTime == isFirstTime) &&
             (identical(other.pan, pan) || other.pan == pan) &&
-            const DeepCollectionEquality().equals(other._incomes, _incomes) &&
+            const DeepCollectionEquality()
+                .equals(other._interests, _interests) &&
             (identical(other.referredBy, referredBy) ||
                 other.referredBy == referredBy) &&
             const DeepCollectionEquality()
@@ -449,7 +454,7 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
       isVerified,
       isFirstTime,
       pan,
-      const DeepCollectionEquality().hash(_incomes),
+      const DeepCollectionEquality().hash(_interests),
       referredBy,
       const DeepCollectionEquality().hash(_referredIds),
       createdAt,
@@ -472,7 +477,7 @@ class _$UserModelImpl with DiagnosticableTreeMixin implements _UserModel {
 abstract class _UserModel implements UserModel {
   factory _UserModel(
       {final String id,
-      final String uid,
+      final String? uid,
       final String username,
       final String phoneNumber,
       final String emailId,
@@ -481,9 +486,9 @@ abstract class _UserModel implements UserModel {
       final bool isVerified,
       final bool isFirstTime,
       final String pan,
-      final List<IncomeModel> incomes,
+      final List<IncomeModel>? interests,
       final String referredBy,
-      final List<String> referredIds,
+      final List<String>? referredIds,
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
       final DateTime? createdAt,
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
@@ -495,7 +500,7 @@ abstract class _UserModel implements UserModel {
   @override
   String get id;
   @override
-  String get uid;
+  String? get uid;
   @override
   String get username;
   @override
@@ -513,11 +518,11 @@ abstract class _UserModel implements UserModel {
   @override
   String get pan;
   @override
-  List<IncomeModel> get incomes;
+  List<IncomeModel>? get interests;
   @override
   String get referredBy;
   @override
-  List<String> get referredIds;
+  List<String>? get referredIds;
   @override
   @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
   DateTime? get createdAt;
@@ -538,6 +543,8 @@ IncomeModel _$IncomeModelFromJson(Map<String, dynamic> json) {
 mixin _$IncomeModel {
   String get incomeId => throw _privateConstructorUsedError;
   String get depositId => throw _privateConstructorUsedError;
+  String get incomeFromUser => throw _privateConstructorUsedError;
+  String get incomeAmount => throw _privateConstructorUsedError;
   String get incomeType => throw _privateConstructorUsedError;
   @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -559,6 +566,8 @@ abstract class $IncomeModelCopyWith<$Res> {
   $Res call(
       {String incomeId,
       String depositId,
+      String incomeFromUser,
+      String incomeAmount,
       String incomeType,
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
       DateTime? createdAt,
@@ -581,6 +590,8 @@ class _$IncomeModelCopyWithImpl<$Res, $Val extends IncomeModel>
   $Res call({
     Object? incomeId = null,
     Object? depositId = null,
+    Object? incomeFromUser = null,
+    Object? incomeAmount = null,
     Object? incomeType = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -593,6 +604,14 @@ class _$IncomeModelCopyWithImpl<$Res, $Val extends IncomeModel>
       depositId: null == depositId
           ? _value.depositId
           : depositId // ignore: cast_nullable_to_non_nullable
+              as String,
+      incomeFromUser: null == incomeFromUser
+          ? _value.incomeFromUser
+          : incomeFromUser // ignore: cast_nullable_to_non_nullable
+              as String,
+      incomeAmount: null == incomeAmount
+          ? _value.incomeAmount
+          : incomeAmount // ignore: cast_nullable_to_non_nullable
               as String,
       incomeType: null == incomeType
           ? _value.incomeType
@@ -621,6 +640,8 @@ abstract class _$$IncomeModelImplCopyWith<$Res>
   $Res call(
       {String incomeId,
       String depositId,
+      String incomeFromUser,
+      String incomeAmount,
       String incomeType,
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
       DateTime? createdAt,
@@ -641,6 +662,8 @@ class __$$IncomeModelImplCopyWithImpl<$Res>
   $Res call({
     Object? incomeId = null,
     Object? depositId = null,
+    Object? incomeFromUser = null,
+    Object? incomeAmount = null,
     Object? incomeType = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -653,6 +676,14 @@ class __$$IncomeModelImplCopyWithImpl<$Res>
       depositId: null == depositId
           ? _value.depositId
           : depositId // ignore: cast_nullable_to_non_nullable
+              as String,
+      incomeFromUser: null == incomeFromUser
+          ? _value.incomeFromUser
+          : incomeFromUser // ignore: cast_nullable_to_non_nullable
+              as String,
+      incomeAmount: null == incomeAmount
+          ? _value.incomeAmount
+          : incomeAmount // ignore: cast_nullable_to_non_nullable
               as String,
       incomeType: null == incomeType
           ? _value.incomeType
@@ -677,6 +708,8 @@ class _$IncomeModelImpl with DiagnosticableTreeMixin implements _IncomeModel {
   _$IncomeModelImpl(
       {this.incomeId = '',
       this.depositId = '',
+      this.incomeFromUser = '',
+      this.incomeAmount = '',
       this.incomeType = '',
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
       this.createdAt,
@@ -694,6 +727,12 @@ class _$IncomeModelImpl with DiagnosticableTreeMixin implements _IncomeModel {
   final String depositId;
   @override
   @JsonKey()
+  final String incomeFromUser;
+  @override
+  @JsonKey()
+  final String incomeAmount;
+  @override
+  @JsonKey()
   final String incomeType;
   @override
   @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
@@ -704,7 +743,7 @@ class _$IncomeModelImpl with DiagnosticableTreeMixin implements _IncomeModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'IncomeModel(incomeId: $incomeId, depositId: $depositId, incomeType: $incomeType, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'IncomeModel(incomeId: $incomeId, depositId: $depositId, incomeFromUser: $incomeFromUser, incomeAmount: $incomeAmount, incomeType: $incomeType, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -714,6 +753,8 @@ class _$IncomeModelImpl with DiagnosticableTreeMixin implements _IncomeModel {
       ..add(DiagnosticsProperty('type', 'IncomeModel'))
       ..add(DiagnosticsProperty('incomeId', incomeId))
       ..add(DiagnosticsProperty('depositId', depositId))
+      ..add(DiagnosticsProperty('incomeFromUser', incomeFromUser))
+      ..add(DiagnosticsProperty('incomeAmount', incomeAmount))
       ..add(DiagnosticsProperty('incomeType', incomeType))
       ..add(DiagnosticsProperty('createdAt', createdAt))
       ..add(DiagnosticsProperty('updatedAt', updatedAt));
@@ -728,6 +769,10 @@ class _$IncomeModelImpl with DiagnosticableTreeMixin implements _IncomeModel {
                 other.incomeId == incomeId) &&
             (identical(other.depositId, depositId) ||
                 other.depositId == depositId) &&
+            (identical(other.incomeFromUser, incomeFromUser) ||
+                other.incomeFromUser == incomeFromUser) &&
+            (identical(other.incomeAmount, incomeAmount) ||
+                other.incomeAmount == incomeAmount) &&
             (identical(other.incomeType, incomeType) ||
                 other.incomeType == incomeType) &&
             (identical(other.createdAt, createdAt) ||
@@ -738,8 +783,8 @@ class _$IncomeModelImpl with DiagnosticableTreeMixin implements _IncomeModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, incomeId, depositId, incomeType, createdAt, updatedAt);
+  int get hashCode => Object.hash(runtimeType, incomeId, depositId,
+      incomeFromUser, incomeAmount, incomeType, createdAt, updatedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -759,6 +804,8 @@ abstract class _IncomeModel implements IncomeModel {
   factory _IncomeModel(
       {final String incomeId,
       final String depositId,
+      final String incomeFromUser,
+      final String incomeAmount,
       final String incomeType,
       @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
       final DateTime? createdAt,
@@ -772,6 +819,10 @@ abstract class _IncomeModel implements IncomeModel {
   String get incomeId;
   @override
   String get depositId;
+  @override
+  String get incomeFromUser;
+  @override
+  String get incomeAmount;
   @override
   String get incomeType;
   @override

@@ -91,7 +91,7 @@ class FirebaseAuthRepository implements IAuthRepository {
         'referredBy': refferedBy,
         'createdAt': DateTime.timestamp()
       };
-      // print(data);
+      // debugPrint(data);
 
       await _firestore
           .collection('users')
@@ -111,8 +111,10 @@ class FirebaseAuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<bool> signInWithUsernameAndPassword( // in use
-      String username, String password) async {
+  Future<bool> signInWithUsernameAndPassword(
+      // in use
+      String username,
+      String password) async {
     var email = await _getEmailForUsername(username);
     if (email == null) {
       throw FirebaseAuthException(
@@ -124,10 +126,10 @@ class FirebaseAuthRepository implements IAuthRepository {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      // print('Sign-in successful.');
+      // debugPrint('Sign-in successful.');
       return true;
     } catch (e) {
-      // print('Sign-in failed: $e');
+      // debugPrint('Sign-in failed: $e');
       return false;
     }
   }

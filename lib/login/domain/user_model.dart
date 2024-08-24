@@ -5,33 +5,12 @@ import 'package:flutter/foundation.dart';
 part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
-// Create a new user
-
-/// User details required for registering :
-/// - Pan card (capital cased)
-/// - Phone
-/// - Email
-/// - Name
-/// - List<Interest> (model)
-///    a. income id
-///    b. interest amount
-///    c. interest type ( non-working | direct-referral | uni-level ) nw , dr, ul, gi
-///    d. updated_at and created_at timestamp
-/// - List<Income> (model)
-///    a. income id
-///    b. deposit amount
-///    c. created_at timestamp
-///    d. updated_at timestamp
-///    e.
-/// - timestamp created_at
-/// - timestamp updated_at
-
 @freezed
 class UserModel with _$UserModel {
   @JsonSerializable(explicitToJson: true)
   factory UserModel({
     @Default('') String id,
-    @Default('') String uid,
+    @Default('') String? uid,
     @Default('') String username,
     @Default('') String phoneNumber,
     @Default('') String emailId,
@@ -40,9 +19,9 @@ class UserModel with _$UserModel {
     @Default(false) bool isVerified,
     @Default(true) bool isFirstTime,
     @Default('') String pan,
-    @Default([]) List<IncomeModel> incomes,
+    @Default([]) List<IncomeModel>? interests,
     @Default('') String referredBy,
-    @Default([]) List<String> referredIds,
+    @Default([]) List<String>? referredIds,
     @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
     DateTime? createdAt,
     @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
@@ -59,6 +38,8 @@ class IncomeModel with _$IncomeModel {
   factory IncomeModel({
     @Default('') String incomeId,
     @Default('') String depositId,
+    @Default('') String incomeFromUser,
+    @Default('') String incomeAmount,
     @Default('') String incomeType,
     @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
     DateTime? createdAt,

@@ -8,6 +8,7 @@ class LoginState with _$LoginState {
     @Default(false) bool isLoading,
     @Default(false) bool isUser,
     @Default('') String username,
+    @Default('') String tmpPass,
     @Default('') String password,
     @Default(false) bool isUserVerified,
   }) = _LoginState;

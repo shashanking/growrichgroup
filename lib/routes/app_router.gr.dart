@@ -41,7 +41,7 @@ abstract class $AppRouter extends _i6.RootStackRouter {
     DashboardRoute.name: (routeData) {
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i3.DashboardPage(),
+        child: const _i3.DashboardPage(),
       );
     },
     LoginRoute.name: (routeData) {

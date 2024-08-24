@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,16 +43,24 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
   }
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
+      final notifier = ref.read(addMemberProvider.notifier);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final notifier = ref.read(AddMemberProvider.notifier);
-    final newUser = ref.watch(AddMemberProvider).newUser; // Watching the new user state
+    final notifier = ref.read(addMemberProvider.notifier);
+    final newUser = ref.watch(addMemberProvider).newUser;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Add New Member')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.sp),
         child: SizedBox(
-          width: kIsWeb ? 30.w : 90.w,
+          width: Device.screenType == ScreenType.desktop ? 30.w : 90.w,
           child: Form(
             key: _formKey,
             child: Column(
@@ -72,7 +81,7 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.sp),
 
                 // Phone Number Field
                 TextFormField(
@@ -96,7 +105,7 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.sp),
 
                 // Email ID Field
                 TextFormField(
@@ -116,7 +125,7 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.sp),
 
                 // PAN Card Field
                 TextFormField(
@@ -133,13 +142,14 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter the PAN card number';
-                    } else if (value.length < 10 || !pancardRegex.hasMatch(value)) {
+                    } else if (value.length < 10 ||
+                        !pancardRegex.hasMatch(value)) {
                       return 'Please enter a valid PAN card number';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24.sp),
 
                 // Deposit Amount
                 TextFormField(
@@ -149,16 +159,18 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.money),
                   ),
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter the Deposit Amount';
-                    } else if (int.parse(_depositAmountController.text) < 5000) {
+                    } else if (int.tryParse(value) == null ||
+                        int.parse(value) < 5000) {
                       return 'Deposit amount must be ₹5000 minimum.';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24.sp),
 
                 // Add Member Button
                 ElevatedButton(
@@ -183,20 +195,20 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(vertical: 16.sp),
                   ),
                   child: const Text('Add Member'),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24.sp),
 
                 // Show new user details after form submission
                 if (newUser != null) ...[
-                  const Text('New User Details:'),
-                  const SizedBox(height: 8),
-                  Text('Username: ${newUser.id}'),
-                  Text('Name: ${newUser.username}'),
-                  Text('Temporary passord: ${newUser.temporaryPassword}'),
-                  // Text('Deposit Amount: ${newUser.depositAmount}'),
+                  const SelectableText('New User Details:'),
+                  SizedBox(height: 8.sp),
+                  SelectableText('Username: ${newUser.id}'),
+                  SelectableText('Name: ${newUser.username}'),
+                  SelectableText(
+                      'Temporary password: ${newUser.temporaryPassword}'),
                 ],
               ],
             ),

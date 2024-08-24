@@ -19,6 +19,7 @@ mixin _$LoginState {
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isUser => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
+  String get tmpPass => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
   bool get isUserVerified => throw _privateConstructorUsedError;
 
@@ -37,6 +38,7 @@ abstract class $LoginStateCopyWith<$Res> {
       {bool isLoading,
       bool isUser,
       String username,
+      String tmpPass,
       String password,
       bool isUserVerified});
 }
@@ -57,6 +59,7 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
     Object? isLoading = null,
     Object? isUser = null,
     Object? username = null,
+    Object? tmpPass = null,
     Object? password = null,
     Object? isUserVerified = null,
   }) {
@@ -72,6 +75,10 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      tmpPass: null == tmpPass
+          ? _value.tmpPass
+          : tmpPass // ignore: cast_nullable_to_non_nullable
               as String,
       password: null == password
           ? _value.password
@@ -97,6 +104,7 @@ abstract class _$$LoginStateImplCopyWith<$Res>
       {bool isLoading,
       bool isUser,
       String username,
+      String tmpPass,
       String password,
       bool isUserVerified});
 }
@@ -115,6 +123,7 @@ class __$$LoginStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? isUser = null,
     Object? username = null,
+    Object? tmpPass = null,
     Object? password = null,
     Object? isUserVerified = null,
   }) {
@@ -130,6 +139,10 @@ class __$$LoginStateImplCopyWithImpl<$Res>
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      tmpPass: null == tmpPass
+          ? _value.tmpPass
+          : tmpPass // ignore: cast_nullable_to_non_nullable
               as String,
       password: null == password
           ? _value.password
@@ -150,6 +163,7 @@ class _$LoginStateImpl extends _LoginState {
       {this.isLoading = false,
       this.isUser = false,
       this.username = '',
+      this.tmpPass = '',
       this.password = '',
       this.isUserVerified = false})
       : super._();
@@ -165,6 +179,9 @@ class _$LoginStateImpl extends _LoginState {
   final String username;
   @override
   @JsonKey()
+  final String tmpPass;
+  @override
+  @JsonKey()
   final String password;
   @override
   @JsonKey()
@@ -172,7 +189,7 @@ class _$LoginStateImpl extends _LoginState {
 
   @override
   String toString() {
-    return 'LoginState(isLoading: $isLoading, isUser: $isUser, username: $username, password: $password, isUserVerified: $isUserVerified)';
+    return 'LoginState(isLoading: $isLoading, isUser: $isUser, username: $username, tmpPass: $tmpPass, password: $password, isUserVerified: $isUserVerified)';
   }
 
   @override
@@ -185,6 +202,7 @@ class _$LoginStateImpl extends _LoginState {
             (identical(other.isUser, isUser) || other.isUser == isUser) &&
             (identical(other.username, username) ||
                 other.username == username) &&
+            (identical(other.tmpPass, tmpPass) || other.tmpPass == tmpPass) &&
             (identical(other.password, password) ||
                 other.password == password) &&
             (identical(other.isUserVerified, isUserVerified) ||
@@ -192,8 +210,8 @@ class _$LoginStateImpl extends _LoginState {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, isLoading, isUser, username, password, isUserVerified);
+  int get hashCode => Object.hash(runtimeType, isLoading, isUser, username,
+      tmpPass, password, isUserVerified);
 
   @JsonKey(ignore: true)
   @override
@@ -207,6 +225,7 @@ abstract class _LoginState extends LoginState {
       {final bool isLoading,
       final bool isUser,
       final String username,
+      final String tmpPass,
       final String password,
       final bool isUserVerified}) = _$LoginStateImpl;
   const _LoginState._() : super._();
@@ -217,6 +236,8 @@ abstract class _LoginState extends LoginState {
   bool get isUser;
   @override
   String get username;
+  @override
+  String get tmpPass;
   @override
   String get password;
   @override

@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:growrichgroup_dashboard/login/domain/deposit_model.dart';
@@ -18,27 +19,30 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
   String generateMemberId() {
     const prefix = 'GG';
     final random = Random();
-    final randomNumber = random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
+    final randomNumber =
+        random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
     return '$prefix$randomNumber';
   }
 
   String generateDepositId() {
     const prefix = 'DD';
     final random = Random();
-    final randomNumber = random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
+    final randomNumber =
+        random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
     return '$prefix$randomNumber';
   }
 
   String generateTemporaryPassword() {
     const prefix = 'PW';
     final random = Random();
-    final randomNumber = random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
+    final randomNumber =
+        random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
     return '$prefix$randomNumber';
   }
 
   // Function to extract the part before @ from the email
   String extractEmailPrefix(String email) {
-    return email.split('@')[0];
+    return email.split('@')[0].toUpperCase();
   }
 
   Future<void> registerMember({
@@ -46,106 +50,149 @@ class AddMemberNotifier extends StateNotifier<AddMemberState> {
     required String phone,
     required String email,
     required String panCard,
-    required String depositAmount, // Pass the current user's username as referralID
+    required String depositAmount,
   }) async {
     state = state.copyWith(isLoading: true);
-    final firestore = FirebaseFirestore.instance;
-    String referredByUser = '';
 
     try {
-      // Check if a user already exists with the given phone number, PAN, or email
-      final checkPhone =
-          await firestore.collection('users').where('phoneNumber', isEqualTo: phone).get();
-
-      final checkEmail =
-          await firestore.collection('users').where('emailID', isEqualTo: email).get();
-
-      final checkPan = await firestore.collection('users').where('pan', isEqualTo: panCard).get();
-
-      if (checkPhone.docs.isNotEmpty || checkEmail.docs.isNotEmpty || checkPan.docs.isNotEmpty) {
-        // A user with this phone, email, or PAN already exists
+      if (await _doesUserExist(phone: phone, email: email, panCard: panCard)) {
+        Fluttertoast.showToast(msg: 'User already exists');
         state = state.copyWith(isLoading: false);
-        Fluttertoast.showToast(msg: 'User already exisits');
-
-        // return false;
+        return;
       }
 
       final newUserId = generateMemberId();
       final newDepositId = generateDepositId();
       final temporaryPassword = generateTemporaryPassword();
 
-      // Get the current user's email
-      final User? user = FirebaseAuth.instance.currentUser;
+      final User? user = _auth.currentUser;
       if (user != null) {
-        String email = user.email!;
-        referredByUser = extractEmailPrefix(email).toUpperCase();
-      }
-      // Create a new user
+        final referredByUser =
+            _getReferredByUser(extractEmailPrefix(user.email!));
+        final newUser = _createNewUser(
+          userId: newUserId,
+          name: name,
+          phone: phone,
+          email: email,
+          panCard: panCard,
+          temporaryPassword: temporaryPassword,
+          referredByUser: referredByUser,
+          newDepositId: newDepositId,
+        );
 
-      /**
-       * User details required for registering :
-       * - Pan card (capital cased)
-       * - Phone 
-       * - Email
-       * - Name
-       * - List<Interest> (model)
-       *    a. income id
-       *    b. interest amount
-       *    c. interest type ( non-working | direct-referral | uni-level )
-       *    d. updated_at and created_at timestamp
-       * - List<Income> (model)
-       *    a. income id
-       *    b. deposit amount 
-       *    c. created_at timestamp
-       *    d. updated_at timestamp
-       *    e. 
-       * - timestamp created_at
-       * - timestamp updated_at
-       */
-      final newUser = UserModel(
-        id: newUserId,
-        username: name,
-        phoneNumber: phone, // deposit ammount missing
-        emailId: email,
-        depositId: newDepositId,
-        temporaryPassword: temporaryPassword,
-        pan: panCard.toUpperCase(),
-        wallet: const WalletModel(),
-        isVerified: false,
-        referredBy: referredByUser,
-        referredIds: [],
-      );
+        final newDeposit = _createNewDeposit(
+          newUserId: newUserId,
+          newDepositId: newDepositId,
+          depositAmount: depositAmount,
+          depositorName: name,
+        );
 
-      final newDeposit = DepositModel(
-        id: newUserId,
-        depositId: newDepositId,
-        depositAmount: depositAmount,
-        depositorName: name,
-      );
+        await _saveNewUserAndDeposit(newUser, newDeposit);
+        await _updateReferredIds(referredByUser, newUserId);
 
-      // Add the new user to Firestore
-      await firestore.collection('users').doc(newUser.id).set(newUser.toJson());
-
-      // Add the new deposit to Firestore
-      await firestore.collection('deposits').doc(newDeposit.depositId).set(newDeposit.toJson());
-
-      state = state.copyWith(newUser: newUser);
-
-      // Add the new user's ID to the current user's referredIds list
-      if (referredByUser.isNotEmpty) {
-        final currentUserRef = firestore.collection('users').doc(referredByUser);
-        await currentUserRef.update({
-          'referredIds': FieldValue.arrayUnion([newUserId])
-        });
+        state = state.copyWith(newUser: newUser);
       }
 
       state = state.copyWith(isLoading: false);
-      // return true;
     } catch (e) {
-      // Handle any errors here
-      print(e);
+      debugPrint(e.toString());
       state = state.copyWith(isLoading: false);
-      // return false;
     }
+  }
+
+// Function to check if a user already exists
+  Future<bool> _doesUserExist({
+    required String phone,
+    required String email,
+    required String panCard,
+  }) async {
+    final checkPhone = await _firestore
+        .collection('users')
+        .where('phoneNumber', isEqualTo: phone)
+        .get();
+
+    final checkEmail = await _firestore
+        .collection('users')
+        .where('emailID', isEqualTo: email)
+        .get();
+
+    final checkPan = await _firestore
+        .collection('users')
+        .where('pan', isEqualTo: panCard)
+        .get();
+
+    return checkPhone.docs.isNotEmpty ||
+        checkEmail.docs.isNotEmpty ||
+        checkPan.docs.isNotEmpty;
+  }
+
+// Function to extract referredBy user from email
+  String _getReferredByUser(String email) {
+    return extractEmailPrefix(email).toUpperCase();
+  }
+
+// Function to create a new user model
+  UserModel _createNewUser({
+    required String userId,
+    required String name,
+    required String phone,
+    required String email,
+    required String panCard,
+    required String temporaryPassword,
+    required String referredByUser,
+    required String newDepositId,
+  }) {
+    return UserModel(
+      id: userId,
+      username: name,
+      phoneNumber: phone,
+      emailId: email,
+      depositId: [newDepositId],
+      temporaryPassword: temporaryPassword,
+      pan: panCard.toUpperCase(),
+      isVerified: false,
+      referredBy: referredByUser,
+      referredIds: [],
+      interests: [],
+      createdAt: DateTime.timestamp(),
+      updatedAt: DateTime.timestamp(),
+    );
+  }
+
+// Function to create a new deposit model
+  DepositModel _createNewDeposit({
+    required String newUserId,
+    required String newDepositId,
+    required String depositAmount,
+    required String depositorName,
+  }) {
+    return DepositModel(
+      id: newUserId,
+      depositId: newDepositId,
+      depositAmount: depositAmount,
+      depositorName: depositorName,
+      createdAt: DateTime.timestamp(),
+      updatedAt: DateTime.timestamp(),
+    );
+  }
+
+// Function to save the new user and deposit to Firestore
+  Future<void> _saveNewUserAndDeposit(
+      UserModel newUser, DepositModel newDeposit) async {
+    await _firestore
+        .collection('deposits')
+        .doc(newDeposit.depositId)
+        .set(newDeposit.toJson());
+
+    await _firestore.collection('users').doc(newUser.id).set(newUser.toJson());
+  }
+
+// Function to update referred IDs of the referrer
+  Future<void> _updateReferredIds(
+      String referredByUser, String newUserId) async {
+    final currentUserRef = _firestore.collection('users').doc(referredByUser);
+    await currentUserRef.update({
+      'referredIds': FieldValue.arrayUnion([newUserId])
+    });
   }
 }

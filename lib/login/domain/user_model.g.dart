@@ -21,7 +21,7 @@ _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
       isVerified: json['isVerified'] as bool? ?? false,
       isFirstTime: json['isFirstTime'] as bool? ?? true,
       pan: json['pan'] as String? ?? '',
-      incomes: (json['incomes'] as List<dynamic>?)
+      interests: (json['interests'] as List<dynamic>?)
               ?.map((e) => IncomeModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -46,7 +46,7 @@ Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
       'isVerified': instance.isVerified,
       'isFirstTime': instance.isFirstTime,
       'pan': instance.pan,
-      'incomes': instance.incomes.map((e) => e.toJson()).toList(),
+      'interests': instance.interests?.map((e) => e.toJson()).toList(),
       'referredBy': instance.referredBy,
       'referredIds': instance.referredIds,
       'createdAt': _dateTimeToTimestamp(instance.createdAt),
@@ -57,6 +57,8 @@ _$IncomeModelImpl _$$IncomeModelImplFromJson(Map<String, dynamic> json) =>
     _$IncomeModelImpl(
       incomeId: json['incomeId'] as String? ?? '',
       depositId: json['depositId'] as String? ?? '',
+      incomeFromUser: json['incomeFromUser'] as String? ?? '',
+      incomeAmount: json['incomeAmount'] as String? ?? '',
       incomeType: json['incomeType'] as String? ?? '',
       createdAt: _dateTimeFromTimestamp(json['createdAt'] as Timestamp?),
       updatedAt: _dateTimeFromTimestamp(json['updatedAt'] as Timestamp?),
@@ -66,6 +68,8 @@ Map<String, dynamic> _$$IncomeModelImplToJson(_$IncomeModelImpl instance) =>
     <String, dynamic>{
       'incomeId': instance.incomeId,
       'depositId': instance.depositId,
+      'incomeFromUser': instance.incomeFromUser,
+      'incomeAmount': instance.incomeAmount,
       'incomeType': instance.incomeType,
       'createdAt': _dateTimeToTimestamp(instance.createdAt),
       'updatedAt': _dateTimeToTimestamp(instance.updatedAt),
