@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:growrichgroup_dashboard/base/shared/providers.dart';
-import 'package:growrichgroup_dashboard/routes/app_router.gr.dart';
+import 'package:growrichgroup_dashboard/core/routes/app_router.gr.dart';
 
 class SideNavigation extends ConsumerWidget {
   @override
@@ -18,8 +18,7 @@ class SideNavigation extends ConsumerWidget {
         children: [
           // Spacing from top
           Container(
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
             child: Image.asset(
               'assets/images/grg.png',
               scale: 2,

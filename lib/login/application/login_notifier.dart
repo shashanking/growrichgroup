@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:growrichgroup_dashboard/login/application/login_state.dart';
 import 'package:growrichgroup_dashboard/login/domain/i_auth_repository.dart';
-import 'package:growrichgroup_dashboard/login/domain/user_model.dart';
 import 'package:riverpod/riverpod.dart';
 
 // GG1000001
@@ -29,11 +27,8 @@ class AuthNotifier extends StateNotifier<LoginState> {
     isLoginValid = true;
 
     try {
-      final userSnapshot = await _firestore
-          .collection('users')
-          .where('id', isEqualTo: username)
-          .limit(1)
-          .get();
+      final userSnapshot =
+          await _firestore.collection('users').where('id', isEqualTo: username).limit(1).get();
 
       if (userSnapshot.docs.isEmpty) {
         _handleInvalidCredentials();
@@ -49,8 +44,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
 
       // If it's not the user's first time, proceed to normal sign-in
       if (!isFirstTime) {
-        final res = await _authRepository.signInWithUsernameAndPassword(
-            username, password);
+        final res = await _authRepository.signInWithUsernameAndPassword(username, password);
         state = state.copyWith(isLoading: false);
 
         if (res) {
@@ -98,8 +92,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
     Fluttertoast.showToast(msg: message);
   }
 
-  Future<void> updatePassword(
-      String email, String password, VoidCallback voidCallBack) async {
+  Future<void> updatePassword(String email, String password, VoidCallback voidCallBack) async {
     try {
       state = state.copyWith(isLoading: true);
       final finalMail = '$email@growrichgroup.in';
@@ -110,11 +103,11 @@ class AuthNotifier extends StateNotifier<LoginState> {
       await FirebaseFirestore.instance.collection('users').doc(email).update({
         'isFirstTime': false,
       }).then((val) async {
-        final userSnapshot = await _firestore
-            .collection('users')
-            .where('id', isEqualTo: email)
-            .limit(1)
-            .get();
+        // final userSnapshot = await _firestore
+        //     .collection('users')
+        //     .where('id', isEqualTo: email)
+        //     .limit(1)
+        //     .get();
       });
       voidCallBack.call();
       state = state.copyWith(isLoading: false);
