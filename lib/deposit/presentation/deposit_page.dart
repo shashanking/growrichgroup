@@ -68,7 +68,7 @@ class _DepositPageState extends ConsumerState<DepositPage> {
                     ),
                     SizedBox(height: 2.h), // Responsive spacing
                     DropdownButtonFormField<String>(
-                      style: TextStyle(color: Colors.yellow[600]),
+                      style: TextStyle(color: Colors.yellow[800]),
                       value: stateNotifier.paymentMethod,
                       onChanged: (String? newValue) {
                         setState(() {
@@ -108,13 +108,7 @@ class _DepositPageState extends ConsumerState<DepositPage> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
-                          // Handle form submission
-                          // For example: ref.read(depositProvider.notifier).submitDeposit(
-                          //    userId: widget.userId,
-                          //    pan: _panController.text,
-                          //    paymentMethod: _paymentMethod,
-                          //    amount: double.parse(_amountController.text),
-                          // );
+                          // submit deposit 
                         }
                       },
                       child: const Text('Submit'),

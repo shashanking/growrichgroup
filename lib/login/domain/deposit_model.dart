@@ -12,13 +12,32 @@ class DepositModel with _$DepositModel {
     @Default('') String depositId,
     @Default('') String depositAmount,
     @Default('') String depositorName,
-      @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
-    DateTime? createdAt, 
+    @Default([]) List<TopUpModel>? topUps,
+    @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+    DateTime? createdAt,
     @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
     DateTime? updatedAt,
   }) = _DepositModel;
 
-  factory DepositModel.fromJson(Map<String, dynamic> json) => _$DepositModelFromJson(json);
+  factory DepositModel.fromJson(Map<String, dynamic> json) =>
+      _$DepositModelFromJson(json);
+}
+
+@freezed
+class TopUpModel with _$TopUpModel {
+  @JsonSerializable(explicitToJson: true)
+  const factory TopUpModel({
+    @Default('') String id,
+    @Default('') String topUpId,
+    @Default('') String topupAmount,
+    @Default('') String depositorName,
+    @Default(false) bool isVerified,
+    @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _dateTimeToTimestamp)
+    DateTime? createdAt,
+  }) = _TopUpModel;
+
+  factory TopUpModel.fromJson(Map<String, dynamic> json) =>
+      _$TopUpModelFromJson(json);
 }
 
 DateTime? _dateTimeFromTimestamp(Timestamp? timestamp) {
