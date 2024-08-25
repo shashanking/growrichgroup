@@ -9,225 +9,128 @@ import 'package:growrichgroup_dashboard/login/domain/user_model.dart';
 
 @RoutePage()
 class ReferralListPage extends ConsumerWidget {
+  final String userId;
   final String depositId;
 
-  const ReferralListPage({super.key, required this.depositId});
+  const ReferralListPage({
+    Key? key,
+    required this.userId,
+    required this.depositId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboardNotifier = ref.watch(dashbaordProvider.notifier);
 
-// populate the list
-    List sortedReferredList = List.from([]);
-
-    sortedReferredList.sort((a, b) => b.createdAt?.compareTo(a.createdAt ?? DateTime.now()) ?? 0);
-
     return Scaffold(
-      body: Card(
-        color: Colors.white.withOpacity(0.2),
-        child: Container(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      child: Text(
-                        'ID',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150,
-                      child: Text(
-                        'Username',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150,
-                      child: Text(
-                        'Deposit Amount',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150,
-                      child: Text(
-                        'Members under',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150,
-                      child: Text(
-                        'Created Date',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150,
-                      child: Text(
-                        'Team business',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150,
-                      child: Text(
-                        'Verification',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    // Add more fields as needed
-                  ],
-                ),
-                const Divider(),
-                Column(
-                  children: sortedReferredList.isEmpty
-                      ? [const Text('No referrals found', style: TextStyle(color: Colors.white))]
-                      : sortedReferredList
-                          .map(
-                            (user) => FutureBuilder<DepositModel?>(
-                              future: dashboardNotifier.fetchDepositById(user.depositId.last),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return const SizedBox.shrink();
-                                } else if (snapshot.hasError) {
-                                  return const Text(
-                                    'Error loading deposit data',
-                                    style: TextStyle(color: Colors.white),
-                                  );
-                                } else if (!snapshot.hasData || snapshot.data == null) {
-                                  return const Text(
-                                    'No deposit found',
-                                    style: TextStyle(color: Colors.white),
-                                  );
-                                } else {
-                                  final deposit = snapshot.data!;
-                                  return FutureBuilder<double>(
-                                    future: dashboardNotifier
-                                        .calculateTotalDepositAmount(user.referredIds),
-                                    builder: (context, totalSnapshot) {
-                                      if (totalSnapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const SizedBox.shrink();
-                                      } else if (totalSnapshot.hasError) {
-                                        return const Text(
-                                          'Error loading total deposit',
-                                          style: TextStyle(color: Colors.white),
-                                        );
-                                      } else if (!totalSnapshot.hasData) {
-                                        // final sortedList = deposit;
-                                        return const Text(
-                                          'N/A',
-                                          style: TextStyle(color: Colors.white),
-                                        );
-                                      } else {
-                                        final totalDeposit = totalSnapshot.data!;
-                                        return Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                if (user.referredIds?.isEmpty ?? false) {
-                                                  Fluttertoast.showToast(
-                                                      msg: 'You have no referrals.');
-                                                } else {
-                                                  AutoRouter.of(context).push(
-                                                      ReferralListRoute(depositId: depositId));
-                                                }
-                                              },
-                                              child: IgnorePointer(
-                                                child: _buildReferralRow(
-                                                    user,
-                                                    deposit.depositAmount,
-                                                    deposit.createdAt,
-                                                    totalDeposit),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 4,
-                                            )
-                                          ],
-                                        );
-                                      }
-                                    },
-                                  );
-                                }
-                              },
-                            ),
-                          )
-                          .toList(),
-                ),
-              ],
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        title: const Text('Referral List'),
+      ),
+      body: FutureBuilder<List<UserModel>>(
+        future: dashboardNotifier.fetchReferredUsersById(userId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Error loading referred users'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text('No referrals found'),
+            );
+          } else {
+            final referredList = snapshot.data!;
+            return _buildReferralList(context, ref, referredList);
+          }
+        },
       ),
     );
   }
 
-  Widget _buildReferralRow(
-      UserModel user, String depositAmount, DateTime? createdAt, double totalDeposit) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SizedBox(
-          width: 100, // Set a fixed width to each cell
-          child: SelectableText(
-            user.id,
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-        SizedBox(
-          width: 150,
-          child: SelectableText(
-            user.username,
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-        SizedBox(
-          width: 150,
-          child: SelectableText(
-            '₹ $depositAmount',
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-        SizedBox(
-          width: 150,
-          child: SelectableText(
-            '${user.referredIds?.length}',
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-        SizedBox(
-          width: 150,
-          child: SelectableText(
-            createdAt != null ? '${createdAt.day}/${createdAt.month}/${createdAt.year}' : 'N/A',
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-        SizedBox(
-          width: 150,
-          child: SelectableText(
-            '₹ ${totalDeposit.toStringAsFixed(2)}',
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-        SizedBox(
-          width: 150,
-          child: SelectableText(
-            user.isVerified ? 'Verified' : user.temporaryPassword,
-            style: TextStyle(color: user.isVerified ? Colors.green : Colors.red),
-          ),
-        ),
-      ],
+  Widget _buildReferralList(
+      BuildContext context, WidgetRef ref, List<UserModel> referredList) {
+    final dashboardNotifier = ref.watch(dashbaordProvider.notifier);
+
+    referredList.sort(
+        (a, b) => b.createdAt?.compareTo(a.createdAt ?? DateTime.now()) ?? 0);
+
+    return ListView.builder(
+      itemCount: referredList.length,
+      itemBuilder: (context, index) {
+        final user = referredList[index];
+
+        return FutureBuilder<DepositModel?>(
+          future: dashboardNotifier.fetchDepositById(user.depositId.last),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox.shrink();
+            } else if (snapshot.hasError) {
+              return const ListTile(
+                title: Text('Error loading deposit data'),
+              );
+            } else if (!snapshot.hasData || snapshot.data == null) {
+              return const ListTile(
+                title: Text('No deposit found'),
+              );
+            } else {
+              final deposit = snapshot.data!;
+              return FutureBuilder<double>(
+                future: dashboardNotifier
+                    .calculateTotalDepositAmount(user.referredIds),
+                builder: (context, totalSnapshot) {
+                  if (totalSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const SizedBox.shrink();
+                  } else if (totalSnapshot.hasError) {
+                    return const ListTile(
+                      title: Text('Error loading total deposit'),
+                    );
+                  } else if (!totalSnapshot.hasData) {
+                    return const ListTile(
+                      title: Text('N/A'),
+                    );
+                  } else {
+                    final totalDeposit = totalSnapshot.data!;
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 4,
+                      child: ListTile(
+                        title: Text(user.username,
+                            style: TextStyle(color: Colors.white)),
+                        subtitle: Text(
+                            'Deposit: ₹ ${deposit.depositAmount}, Members under: ${user.referredIds?.length ?? 0}, Team Business: ₹ ${totalDeposit.toStringAsFixed(2)}',
+                            style: TextStyle(color: Colors.white70)),
+                        trailing:
+                            Icon(Icons.arrow_forward, color: Colors.white),
+                        tileColor: Colors.black87,
+                        onTap: () {
+                          if (user.referredIds?.isEmpty ?? true) {
+                            Fluttertoast.showToast(
+                              msg: 'User has no referrals.',
+                            );
+                          } else {
+                            AutoRouter.of(context).push(
+                              ReferralListRoute(
+                                userId: user.id,
+                                depositId: deposit.id,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    );
+                  }
+                },
+              );
+            }
+          },
+        );
+      },
     );
   }
 }

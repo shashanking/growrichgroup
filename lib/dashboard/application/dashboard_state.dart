@@ -14,6 +14,7 @@ class DashboardState with _$DashboardState {
     @Default('') String depositId,
     @Default('') String depositAmount,
     @Default([]) List<UserModel> referredUsersList,
+    @Default([]) List<UserModel> kReferredUsersList,
     @Default(0.0) double totalDRIncome,
     @Default(0.0) double totalNWIncome,
     @Default(0.0) double totalULIncome,

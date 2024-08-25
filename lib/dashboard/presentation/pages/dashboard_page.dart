@@ -117,13 +117,13 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                             OverviewCard(
                               title: 'Non Working Income',
                               value: '₹ ${state.totalNWIncome}',
-                              percentage: '0% than last week',
+                              percentage: '',
                               color: Colors.yellowAccent,
                             ),
                             OverviewCard(
                               title: 'Uni Level Income',
                               value: '₹ ${state.totalULIncome}',
-                              percentage: '0% than last week',
+                              percentage: '',
                               color: Colors.yellowAccent,
                             ),
                             OverviewCard(
@@ -136,7 +136,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                             OverviewCard(
                               title: 'Team Business',
                               value: '₹ ${state.teamIncome}',
-                              percentage: '0% than last week',
+                              percentage: '',
                               color: Colors.yellowAccent,
                             ),
                           ],
@@ -152,7 +152,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                         const SizedBox(height: 8),
                         const DirectReferralListCard(),
                         const SizedBox(height: 16),
-                        // GlobalIncomeCard(),
+                        GlobalIncomeCard(),
                         // const SizedBox(height: 16),
                         // GlobalRewardCard(),
                       ],
@@ -212,13 +212,13 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                                   OverviewCard(
                                     title: 'Non Working Income',
                                     value: '₹ ${state.totalNWIncome}',
-                                    percentage: '0% than last week',
+                                    percentage: '',
                                     color: Colors.yellowAccent,
                                   ),
                                   OverviewCard(
                                     title: 'Uni Level Income',
                                     value: '₹ ${state.totalULIncome}',
-                                    percentage: '0% than last week',
+                                    percentage: '',
                                     color: Colors.yellowAccent,
                                   ),
                                   OverviewCard(
@@ -231,7 +231,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                                   OverviewCard(
                                     title: 'Team Business',
                                     value: '₹ ${state.teamIncome}',
-                                    percentage: '0% than last week',
+                                    percentage: '',
                                     color: Colors.yellowAccent,
                                   ),
                                 ],

@@ -11,10 +11,12 @@ class DirectReferralListCard extends ConsumerStatefulWidget {
   const DirectReferralListCard({super.key});
 
   @override
-  ConsumerState<DirectReferralListCard> createState() => _DirectReferralListCardState();
+  ConsumerState<DirectReferralListCard> createState() =>
+      _DirectReferralListCardState();
 }
 
-class _DirectReferralListCardState extends ConsumerState<DirectReferralListCard> {
+class _DirectReferralListCardState
+    extends ConsumerState<DirectReferralListCard> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
@@ -30,9 +32,11 @@ class _DirectReferralListCardState extends ConsumerState<DirectReferralListCard>
     final dasboardState = ref.watch(dashbaordProvider);
     final dashboardNotifier = ref.watch(dashbaordProvider.notifier);
 
-    List<UserModel> sortedReferredList = List.from(dasboardState.referredUsersList);
+    List<UserModel> sortedReferredList =
+        List.from(dasboardState.referredUsersList);
 
-    sortedReferredList.sort((a, b) => b.createdAt?.compareTo(a.createdAt ?? DateTime.now()) ?? 0);
+    sortedReferredList.sort(
+        (a, b) => b.createdAt?.compareTo(a.createdAt ?? DateTime.now()) ?? 0);
 
     return Card(
       color: Colors.white.withOpacity(0.2),
@@ -101,20 +105,26 @@ class _DirectReferralListCardState extends ConsumerState<DirectReferralListCard>
               const Divider(),
               Column(
                 children: sortedReferredList.isEmpty
-                    ? [const Text('No referrals found', style: TextStyle(color: Colors.white))]
+                    ? [
+                        const Text('No referrals found',
+                            style: TextStyle(color: Colors.white))
+                      ]
                     : sortedReferredList
                         .map(
                           (user) => FutureBuilder<DepositModel?>(
-                            future: dashboardNotifier.fetchDepositById(user.depositId.last),
+                            future: dashboardNotifier
+                                .fetchDepositById(user.depositId.last),
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
                                 return const SizedBox.shrink();
                               } else if (snapshot.hasError) {
                                 return const Text(
                                   'Error loading deposit data',
                                   style: TextStyle(color: Colors.white),
                                 );
-                              } else if (!snapshot.hasData || snapshot.data == null) {
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data == null) {
                                 return const Text(
                                   'No deposit found',
                                   style: TextStyle(color: Colors.white),
@@ -123,9 +133,11 @@ class _DirectReferralListCardState extends ConsumerState<DirectReferralListCard>
                                 final deposit = snapshot.data!;
                                 return FutureBuilder<double>(
                                   future: dashboardNotifier
-                                      .calculateTotalDepositAmount(user.referredIds),
+                                      .calculateTotalDepositAmount(
+                                          user.referredIds),
                                   builder: (context, totalSnapshot) {
-                                    if (totalSnapshot.connectionState == ConnectionState.waiting) {
+                                    if (totalSnapshot.connectionState ==
+                                        ConnectionState.waiting) {
                                       return const SizedBox.shrink();
                                     } else if (totalSnapshot.hasError) {
                                       return const Text(
@@ -141,21 +153,31 @@ class _DirectReferralListCardState extends ConsumerState<DirectReferralListCard>
                                     } else {
                                       final totalDeposit = totalSnapshot.data!;
                                       return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              if (user.referredIds?.isEmpty ?? false) {
+                                              if (user.referredIds?.isEmpty ??
+                                                  false) {
                                                 Fluttertoast.showToast(
-                                                    msg: 'You have no referrals.');
+                                                    msg:
+                                                        'Member have no referrals.');
                                               } else {
-                                                AutoRouter.of(context).push(ReferralListRoute(
-                                                    depositId: user.depositId.last));
+                                                AutoRouter.of(context)
+                                                    .push(ReferralListRoute(
+                                                  depositId:
+                                                      user.depositId.last,
+                                                  userId: user.id,
+                                                ));
                                               }
                                             },
                                             child: IgnorePointer(
-                                              child: _buildReferralRow(user, deposit.depositAmount,
-                                                  deposit.createdAt, totalDeposit),
+                                              child: _buildReferralRow(
+                                                  user,
+                                                  deposit.depositAmount,
+                                                  deposit.createdAt,
+                                                  totalDeposit),
                                             ),
                                           ),
                                           const SizedBox(
@@ -179,8 +201,8 @@ class _DirectReferralListCardState extends ConsumerState<DirectReferralListCard>
     );
   }
 
-  Widget _buildReferralRow(
-      UserModel user, String depositAmount, DateTime? createdAt, double totalDeposit) {
+  Widget _buildReferralRow(UserModel user, String depositAmount,
+      DateTime? createdAt, double totalDeposit) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -215,7 +237,9 @@ class _DirectReferralListCardState extends ConsumerState<DirectReferralListCard>
         SizedBox(
           width: 150,
           child: SelectableText(
-            createdAt != null ? '${createdAt.day}/${createdAt.month}/${createdAt.year}' : 'N/A',
+            createdAt != null
+                ? '${createdAt.day}/${createdAt.month}/${createdAt.year}'
+                : 'N/A',
             style: const TextStyle(color: Colors.white),
           ),
         ),
@@ -230,7 +254,8 @@ class _DirectReferralListCardState extends ConsumerState<DirectReferralListCard>
           width: 150,
           child: SelectableText(
             user.isVerified ? 'Verified' : user.temporaryPassword,
-            style: TextStyle(color: user.isVerified ? Colors.green : Colors.red),
+            style:
+                TextStyle(color: user.isVerified ? Colors.green : Colors.red),
           ),
         ),
       ],

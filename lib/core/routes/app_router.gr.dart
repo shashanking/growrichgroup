@@ -59,6 +59,7 @@ abstract class $AppRouter extends _i7.RootStackRouter {
         routeData: routeData,
         child: _i5.ReferralListPage(
           key: args.key,
+          userId: args.userId,
           depositId: args.depositId,
         ),
       );
@@ -137,12 +138,14 @@ class LoginRoute extends _i7.PageRouteInfo<void> {
 class ReferralListRoute extends _i7.PageRouteInfo<ReferralListRouteArgs> {
   ReferralListRoute({
     _i8.Key? key,
+    required String userId,
     required String depositId,
     List<_i7.PageRouteInfo>? children,
   }) : super(
           ReferralListRoute.name,
           args: ReferralListRouteArgs(
             key: key,
+            userId: userId,
             depositId: depositId,
           ),
           initialChildren: children,
@@ -157,16 +160,19 @@ class ReferralListRoute extends _i7.PageRouteInfo<ReferralListRouteArgs> {
 class ReferralListRouteArgs {
   const ReferralListRouteArgs({
     this.key,
+    required this.userId,
     required this.depositId,
   });
 
   final _i8.Key? key;
 
+  final String userId;
+
   final String depositId;
 
   @override
   String toString() {
-    return 'ReferralListRouteArgs{key: $key, depositId: $depositId}';
+    return 'ReferralListRouteArgs{key: $key, userId: $userId, depositId: $depositId}';
   }
 }
 

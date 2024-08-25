@@ -537,4 +537,122 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
     // Update the state to reflect that the user is verified
     state = state.copyWith(isVerified: true);
   }
+
+  Future<Map<String, dynamic>> checkUserGlobalLevel() async {
+    try {
+      // Fetch the user document
+      final uid = extractEmailPrefix(_auth.currentUser?.email ?? '');
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(uid).get();
+
+      if (userDoc.exists) {
+        List<String> referredIds =
+            List<String>.from(userDoc['referredIds'] ?? []);
+
+        if (referredIds.isEmpty) {
+          return {
+            'level': 'None',
+            'nextLevel': 'Silver',
+            'amountNeeded': 1000000 // 10 lakh
+          };
+        }
+
+        // Fetch the deposits of all referred users
+        List<DocumentSnapshot> depositDocs = [];
+        for (String referredId in referredIds) {
+          QuerySnapshot depositQuery = await _firestore
+              .collection('deposits')
+              .where('id', isEqualTo: referredId)
+              .get();
+          depositDocs.addAll(depositQuery.docs);
+        }
+
+        double totalDeposit = 0;
+        double maxSingleDeposit = 0;
+
+        // Calculate total deposits and find the max single deposit
+        for (var depositDoc in depositDocs) {
+          double depositAmount = double.parse(depositDoc['depositAmount']);
+          totalDeposit += depositAmount;
+          if (depositAmount > maxSingleDeposit) {
+            maxSingleDeposit = depositAmount;
+          }
+        }
+
+        // Check qualification for different levels
+        String currentLevel = 'None';
+        String nextLevel = 'Silver';
+        double amountNeeded = 1000000 - totalDeposit;
+
+        if (totalDeposit >= 1000000 && maxSingleDeposit >= totalDeposit * 0.4) {
+          currentLevel = 'Silver';
+          nextLevel = 'Gold';
+          amountNeeded = 2500000 - totalDeposit;
+        }
+
+        if (totalDeposit >= 2500000 && maxSingleDeposit >= totalDeposit * 0.4) {
+          currentLevel = 'Gold';
+          nextLevel = 'Platinum';
+          amountNeeded = 5000000 - totalDeposit;
+        }
+
+        if (totalDeposit >= 5000000 && maxSingleDeposit >= totalDeposit * 0.4) {
+          currentLevel = 'Platinum';
+          nextLevel = 'Diamond';
+          amountNeeded = 10000000 - totalDeposit;
+        }
+
+        if (totalDeposit >= 10000000 &&
+            maxSingleDeposit >= totalDeposit * 0.4) {
+          currentLevel = 'Diamond';
+          nextLevel = 'None';
+          amountNeeded = 0;
+        }
+
+        return {
+          'level': currentLevel,
+          'nextLevel': nextLevel,
+          'amountNeeded': amountNeeded
+        };
+      } else {
+        throw Exception('User not found');
+      }
+    } catch (e) {
+      debugPrint('Error checking user level: $e');
+      return {'level': 'Error', 'nextLevel': '', 'amountNeeded': 0};
+    }
+  }
+
+  Future<List<UserModel>> fetchReferredUsersById(String userId) async {
+    try {
+      final List<UserModel> referredUsersList = [];
+
+      // Fetch the referred user's document from Firestore based on userId
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (userDoc.exists) {
+        final List<String> referredIds =
+            List<String>.from(userDoc.data()?['referredIds'] ?? []);
+
+        // Fetch all the referred users based on referredIds
+        for (String referredId in referredIds) {
+          final referredUserDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(referredId)
+              .get();
+          if (referredUserDoc.exists) {
+            referredUsersList.add(UserModel.fromJson(
+                referredUserDoc.data() as Map<String, dynamic>));
+          }
+        }
+      }
+      return referredUsersList;
+    } catch (e) {
+      // Handle any errors that occur during the fetch
+      throw Exception('Error fetching referred users: $e');
+    }
+  }
 }
