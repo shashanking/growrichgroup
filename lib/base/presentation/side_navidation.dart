@@ -22,18 +22,26 @@ class SideNavigation extends ConsumerWidget {
         children: [
           // Spacing from top
           Container(
-            decoration: const BoxDecoration(
-                shape: BoxShape.circle, color: Colors.white),
+            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
             child: Image.asset(
               'assets/images/grg.png',
               scale: 2,
             ),
           ),
           // Adds a divider line
+          if (dashboardState.isAdmin) ...[
+            ListTile(
+              leading: const Icon(Icons.monetization_on, color: Colors.white),
+              title: const Text('Deposits', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                AutoRouter.of(context).push(const DepositsReviewRoute());
+                if (!kIsWeb) Navigator.of(context).pop(); // Close the drawer
+              },
+            ),
+          ],
           ListTile(
             leading: const Icon(Icons.dashboard, color: Colors.white),
-            title:
-                const Text('Dashboard', style: TextStyle(color: Colors.white)),
+            title: const Text('Dashboard', style: TextStyle(color: Colors.white)),
             onTap: () {
               stateNotifier.tapBottomNavIndex(0);
               if (!kIsWeb) Navigator.of(context).pop(); // Close the drawer
@@ -41,8 +49,7 @@ class SideNavigation extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.person_add, color: Colors.white),
-            title:
-                const Text('Add Member', style: TextStyle(color: Colors.white)),
+            title: const Text('Add Member', style: TextStyle(color: Colors.white)),
             onTap: () {
               stateNotifier.tapBottomNavIndex(1);
               context.router.push(const AddMemberRoute()); // Close the drawer

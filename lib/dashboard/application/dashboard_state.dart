@@ -8,6 +8,7 @@ part 'dashboard_state.freezed.dart';
 class DashboardState with _$DashboardState {
   const factory DashboardState({
     @Default(false) bool isLoading,
+    @Default(false) bool isAdmin,
     @Default(null) UserModel? user,
     @Default(null) UserModel? selectedMember,
     @Default(false) bool isVerified,
