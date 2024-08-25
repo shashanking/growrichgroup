@@ -23,9 +23,14 @@ mixin _$DashboardState {
   String get depositId => throw _privateConstructorUsedError;
   String get depositAmount => throw _privateConstructorUsedError;
   List<UserModel> get referredUsersList => throw _privateConstructorUsedError;
-  double get totalIncome => throw _privateConstructorUsedError;
+  double get totalDRIncome => throw _privateConstructorUsedError;
+  double get totalNWIncome => throw _privateConstructorUsedError;
+  double get totalULIncome => throw _privateConstructorUsedError;
+  double get teamIncome => throw _privateConstructorUsedError;
   int get noOfIncome => throw _privateConstructorUsedError;
+  int get teamSum => throw _privateConstructorUsedError;
   String get levelAccess => throw _privateConstructorUsedError;
+  String get depositMap => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DashboardStateCopyWith<DashboardState> get copyWith =>
@@ -46,9 +51,14 @@ abstract class $DashboardStateCopyWith<$Res> {
       String depositId,
       String depositAmount,
       List<UserModel> referredUsersList,
-      double totalIncome,
+      double totalDRIncome,
+      double totalNWIncome,
+      double totalULIncome,
+      double teamIncome,
       int noOfIncome,
-      String levelAccess});
+      int teamSum,
+      String levelAccess,
+      String depositMap});
 
   $UserModelCopyWith<$Res>? get user;
 }
@@ -73,9 +83,14 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
     Object? depositId = null,
     Object? depositAmount = null,
     Object? referredUsersList = null,
-    Object? totalIncome = null,
+    Object? totalDRIncome = null,
+    Object? totalNWIncome = null,
+    Object? totalULIncome = null,
+    Object? teamIncome = null,
     Object? noOfIncome = null,
+    Object? teamSum = null,
     Object? levelAccess = null,
+    Object? depositMap = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -106,17 +121,37 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
           ? _value.referredUsersList
           : referredUsersList // ignore: cast_nullable_to_non_nullable
               as List<UserModel>,
-      totalIncome: null == totalIncome
-          ? _value.totalIncome
-          : totalIncome // ignore: cast_nullable_to_non_nullable
+      totalDRIncome: null == totalDRIncome
+          ? _value.totalDRIncome
+          : totalDRIncome // ignore: cast_nullable_to_non_nullable
+              as double,
+      totalNWIncome: null == totalNWIncome
+          ? _value.totalNWIncome
+          : totalNWIncome // ignore: cast_nullable_to_non_nullable
+              as double,
+      totalULIncome: null == totalULIncome
+          ? _value.totalULIncome
+          : totalULIncome // ignore: cast_nullable_to_non_nullable
+              as double,
+      teamIncome: null == teamIncome
+          ? _value.teamIncome
+          : teamIncome // ignore: cast_nullable_to_non_nullable
               as double,
       noOfIncome: null == noOfIncome
           ? _value.noOfIncome
           : noOfIncome // ignore: cast_nullable_to_non_nullable
               as int,
+      teamSum: null == teamSum
+          ? _value.teamSum
+          : teamSum // ignore: cast_nullable_to_non_nullable
+              as int,
       levelAccess: null == levelAccess
           ? _value.levelAccess
           : levelAccess // ignore: cast_nullable_to_non_nullable
+              as String,
+      depositMap: null == depositMap
+          ? _value.depositMap
+          : depositMap // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -150,9 +185,14 @@ abstract class _$$DashboardStateImplCopyWith<$Res>
       String depositId,
       String depositAmount,
       List<UserModel> referredUsersList,
-      double totalIncome,
+      double totalDRIncome,
+      double totalNWIncome,
+      double totalULIncome,
+      double teamIncome,
       int noOfIncome,
-      String levelAccess});
+      int teamSum,
+      String levelAccess,
+      String depositMap});
 
   @override
   $UserModelCopyWith<$Res>? get user;
@@ -176,9 +216,14 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
     Object? depositId = null,
     Object? depositAmount = null,
     Object? referredUsersList = null,
-    Object? totalIncome = null,
+    Object? totalDRIncome = null,
+    Object? totalNWIncome = null,
+    Object? totalULIncome = null,
+    Object? teamIncome = null,
     Object? noOfIncome = null,
+    Object? teamSum = null,
     Object? levelAccess = null,
+    Object? depositMap = null,
   }) {
     return _then(_$DashboardStateImpl(
       isLoading: null == isLoading
@@ -209,17 +254,37 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
           ? _value._referredUsersList
           : referredUsersList // ignore: cast_nullable_to_non_nullable
               as List<UserModel>,
-      totalIncome: null == totalIncome
-          ? _value.totalIncome
-          : totalIncome // ignore: cast_nullable_to_non_nullable
+      totalDRIncome: null == totalDRIncome
+          ? _value.totalDRIncome
+          : totalDRIncome // ignore: cast_nullable_to_non_nullable
+              as double,
+      totalNWIncome: null == totalNWIncome
+          ? _value.totalNWIncome
+          : totalNWIncome // ignore: cast_nullable_to_non_nullable
+              as double,
+      totalULIncome: null == totalULIncome
+          ? _value.totalULIncome
+          : totalULIncome // ignore: cast_nullable_to_non_nullable
+              as double,
+      teamIncome: null == teamIncome
+          ? _value.teamIncome
+          : teamIncome // ignore: cast_nullable_to_non_nullable
               as double,
       noOfIncome: null == noOfIncome
           ? _value.noOfIncome
           : noOfIncome // ignore: cast_nullable_to_non_nullable
               as int,
+      teamSum: null == teamSum
+          ? _value.teamSum
+          : teamSum // ignore: cast_nullable_to_non_nullable
+              as int,
       levelAccess: null == levelAccess
           ? _value.levelAccess
           : levelAccess // ignore: cast_nullable_to_non_nullable
+              as String,
+      depositMap: null == depositMap
+          ? _value.depositMap
+          : depositMap // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -236,9 +301,14 @@ class _$DashboardStateImpl extends _DashboardState {
       this.depositId = '',
       this.depositAmount = '',
       final List<UserModel> referredUsersList = const [],
-      this.totalIncome = 0.0,
+      this.totalDRIncome = 0.0,
+      this.totalNWIncome = 0.0,
+      this.totalULIncome = 0.0,
+      this.teamIncome = 0.0,
       this.noOfIncome = 0,
-      this.levelAccess = ''})
+      this.teamSum = 0,
+      this.levelAccess = '',
+      this.depositMap = ''})
       : _referredUsersList = referredUsersList,
         super._();
 
@@ -272,17 +342,32 @@ class _$DashboardStateImpl extends _DashboardState {
 
   @override
   @JsonKey()
-  final double totalIncome;
+  final double totalDRIncome;
+  @override
+  @JsonKey()
+  final double totalNWIncome;
+  @override
+  @JsonKey()
+  final double totalULIncome;
+  @override
+  @JsonKey()
+  final double teamIncome;
   @override
   @JsonKey()
   final int noOfIncome;
   @override
   @JsonKey()
+  final int teamSum;
+  @override
+  @JsonKey()
   final String levelAccess;
+  @override
+  @JsonKey()
+  final String depositMap;
 
   @override
   String toString() {
-    return 'DashboardState(isLoading: $isLoading, user: $user, isVerified: $isVerified, uid: $uid, depositId: $depositId, depositAmount: $depositAmount, referredUsersList: $referredUsersList, totalIncome: $totalIncome, noOfIncome: $noOfIncome, levelAccess: $levelAccess)';
+    return 'DashboardState(isLoading: $isLoading, user: $user, isVerified: $isVerified, uid: $uid, depositId: $depositId, depositAmount: $depositAmount, referredUsersList: $referredUsersList, totalDRIncome: $totalDRIncome, totalNWIncome: $totalNWIncome, totalULIncome: $totalULIncome, teamIncome: $teamIncome, noOfIncome: $noOfIncome, teamSum: $teamSum, levelAccess: $levelAccess, depositMap: $depositMap)';
   }
 
   @override
@@ -302,12 +387,21 @@ class _$DashboardStateImpl extends _DashboardState {
                 other.depositAmount == depositAmount) &&
             const DeepCollectionEquality()
                 .equals(other._referredUsersList, _referredUsersList) &&
-            (identical(other.totalIncome, totalIncome) ||
-                other.totalIncome == totalIncome) &&
+            (identical(other.totalDRIncome, totalDRIncome) ||
+                other.totalDRIncome == totalDRIncome) &&
+            (identical(other.totalNWIncome, totalNWIncome) ||
+                other.totalNWIncome == totalNWIncome) &&
+            (identical(other.totalULIncome, totalULIncome) ||
+                other.totalULIncome == totalULIncome) &&
+            (identical(other.teamIncome, teamIncome) ||
+                other.teamIncome == teamIncome) &&
             (identical(other.noOfIncome, noOfIncome) ||
                 other.noOfIncome == noOfIncome) &&
+            (identical(other.teamSum, teamSum) || other.teamSum == teamSum) &&
             (identical(other.levelAccess, levelAccess) ||
-                other.levelAccess == levelAccess));
+                other.levelAccess == levelAccess) &&
+            (identical(other.depositMap, depositMap) ||
+                other.depositMap == depositMap));
   }
 
   @override
@@ -320,9 +414,14 @@ class _$DashboardStateImpl extends _DashboardState {
       depositId,
       depositAmount,
       const DeepCollectionEquality().hash(_referredUsersList),
-      totalIncome,
+      totalDRIncome,
+      totalNWIncome,
+      totalULIncome,
+      teamIncome,
       noOfIncome,
-      levelAccess);
+      teamSum,
+      levelAccess,
+      depositMap);
 
   @JsonKey(ignore: true)
   @override
@@ -341,9 +440,14 @@ abstract class _DashboardState extends DashboardState {
       final String depositId,
       final String depositAmount,
       final List<UserModel> referredUsersList,
-      final double totalIncome,
+      final double totalDRIncome,
+      final double totalNWIncome,
+      final double totalULIncome,
+      final double teamIncome,
       final int noOfIncome,
-      final String levelAccess}) = _$DashboardStateImpl;
+      final int teamSum,
+      final String levelAccess,
+      final String depositMap}) = _$DashboardStateImpl;
   const _DashboardState._() : super._();
 
   @override
@@ -361,11 +465,21 @@ abstract class _DashboardState extends DashboardState {
   @override
   List<UserModel> get referredUsersList;
   @override
-  double get totalIncome;
+  double get totalDRIncome;
+  @override
+  double get totalNWIncome;
+  @override
+  double get totalULIncome;
+  @override
+  double get teamIncome;
   @override
   int get noOfIncome;
   @override
+  int get teamSum;
+  @override
   String get levelAccess;
+  @override
+  String get depositMap;
   @override
   @JsonKey(ignore: true)
   _$$DashboardStateImplCopyWith<_$DashboardStateImpl> get copyWith =>

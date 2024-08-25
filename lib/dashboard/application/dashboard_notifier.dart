@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:growrichgroup_dashboard/dashboard/application/dashboard_state.dart';
+import 'package:growrichgroup_dashboard/login/domain/deposit_model.dart';
 import 'package:growrichgroup_dashboard/login/domain/user_model.dart';
 
 class DashboardNotifier extends StateNotifier<DashboardState> {
@@ -54,8 +55,109 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
       }
     } catch (e) {
       // Handle errors appropriately in production
-      print('Error fetching referred users: $e');
+      debugPrint('Error fetching referred users: $e');
     }
+  }
+
+  Future<int> calculateTeamSum(List<String>? referredByIds) async {
+    try {
+      if (referredByIds == null || referredByIds.isEmpty) {
+        return 0;
+      }
+
+      int sum = 0;
+
+      // A queue to handle the while loop traversal
+      List<String> queue = List.from(referredByIds);
+
+      while (queue.isNotEmpty) {
+        // Get the first element in the queue
+        String currentUserId = queue.removeAt(0);
+
+        // Fetch the user associated with currentUserId from the database
+        UserModel? user = await fetchUserById(currentUserId);
+
+        if (user != null) {
+          // Increment the sum by 1 for the current user
+          sum += 1;
+
+          // If the user has referredIds, add them to the queue
+          if (user.referredIds != null && user.referredIds!.isNotEmpty) {
+            queue.addAll(user.referredIds!);
+          }
+        }
+      }
+
+      return sum;
+    } catch (e) {
+      debugPrint(e.toString());
+      return 0;
+    }
+  }
+
+  Future<double> calculateTotalDepositAmount(
+      List<String>? referredByIds) async {
+    try {
+      if (referredByIds == null || referredByIds.isEmpty) {
+        return 0.00;
+      }
+
+      double totalDepositAmount = 0.00;
+
+      // A queue to handle the while loop traversal
+      List<String> queue = List.from(referredByIds);
+
+      while (queue.isNotEmpty) {
+        // Get the first element in the queue
+        String currentUserId = queue.removeAt(0);
+
+        // Fetch the user associated with currentUserId from the database
+        UserModel? user = await fetchUserById(currentUserId);
+
+        if (user != null && user.depositId.isNotEmpty) {
+          // Get the last deposit ID
+          String lastDepositId = user.depositId.last;
+
+          // Fetch the deposit associated with lastDepositId from the database
+          DepositModel? deposit = await fetchDepositById(lastDepositId);
+
+          if (deposit != null) {
+            // Add the deposit amount to the total
+            totalDepositAmount +=
+                double.tryParse(deposit.depositAmount) ?? 0.00;
+          }
+
+          // If the user has referredIds, add them to the queue
+          if (user.referredIds != null && user.referredIds!.isNotEmpty) {
+            queue.addAll(user.referredIds!);
+          }
+        }
+      }
+
+      return totalDepositAmount;
+    } catch (e) {
+      debugPrint(e.toString());
+      return 0.00;
+    }
+  }
+
+// Assuming you have a function to fetch DepositModel by ID
+  Future<DepositModel?> fetchDepositById(String depositId) async {
+    return await FirebaseFirestore.instance
+        .collection('deposits')
+        .doc(depositId)
+        .get()
+        .then((doc) => doc.exists
+            ? DepositModel.fromJson(doc.data() as Map<String, dynamic>)
+            : null);
+  }
+
+// Assuming you have a function to fetch UserModel by ID
+  Future<UserModel?> fetchUserById(String userId) async {
+    return await _firestore.collection('users').doc(userId).get().then((doc) =>
+        doc.exists
+            ? UserModel.fromJson(doc.data() as Map<String, dynamic>)
+            : null);
   }
 
   Future<void> getUser() async {
@@ -81,7 +183,15 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
             depositAmount = depositDoc['depositAmount'];
           }
 
-          final sum = await totalIncome(userFromModel.interests!);
+          final sumDR = await totalIncome(userFromModel.interests!,
+              type: 'direct-referral-income');
+          final sumNW = await totalIncome(userFromModel.interests!,
+              type: 'non-working-income');
+          final sumUL = await totalIncome(userFromModel.interests!,
+              type: 'uni-level-income');
+          final teamSum = await calculateTeamSum(userFromModel.referredIds);
+          final teamDepositSum =
+              await calculateTotalDepositAmount(userFromModel.referredIds);
 
           state = state.copyWith(
             uid: userID,
@@ -89,7 +199,11 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
             depositAmount: depositAmount,
             user: userFromModel,
             noOfIncome: userFromModel.interests?.length ?? 0,
-            totalIncome: sum,
+            totalDRIncome: sumDR,
+            totalNWIncome: sumNW,
+            totalULIncome: sumUL,
+            teamSum: teamSum,
+            teamIncome: teamDepositSum,
             isLoading: false,
           );
 
@@ -103,14 +217,17 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
     }
   }
 
-  Future<double> totalIncome(List<IncomeModel>? intersts) async {
-    if (intersts == null || intersts.isEmpty) {
+  Future<double> totalIncome(List<IncomeModel>? incomes, {String? type}) async {
+    if (incomes == null || incomes.isEmpty) {
       return 0.00;
     }
 
     double total = 0.00;
-    for (var income in intersts) {
-      total += double.tryParse(income.incomeAmount) ?? 0.00;
+
+    for (var income in incomes) {
+      if (type == null || income.incomeType == type) {
+        total += double.tryParse(income.incomeAmount) ?? 0.00;
+      }
     }
 
     return total;
@@ -150,8 +267,12 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
               double interestAmount = depositAmount * interestPercentage / 100;
 
               // Add the interest to the referred user's document
-              await addInterestToUser(referredUserDoc.id, interestAmount,
-                  depositId, incomeFromUser);
+              await addInterestToUser(
+                  userId: referredUserDoc.id,
+                  interestAmount: interestAmount,
+                  depositId: depositId,
+                  incomeFromUser: incomeFromUser,
+                  type: 'direct-referral-income');
             } else {
               debugPrint(
                   'Member at level $level : ${referredUserDoc['id']} does not meet the direct referral condition.');
@@ -173,6 +294,149 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
       }
     } catch (e) {
       debugPrint('Error distributing referral income: $e');
+    }
+  }
+
+  Future<void> triggerBiWeeklyInterest() async {
+    try {
+      state = state.copyWith(isLoading: true);
+
+      // Fetch all deposit documents from the 'deposits' collection
+      QuerySnapshot depositDocs = await _firestore.collection('deposits').get();
+
+      if (depositDocs.docs.isEmpty) {
+        debugPrint('No deposits found for bi-weekly interest calculation.');
+        state = state.copyWith(isLoading: false);
+        return;
+      }
+
+      for (var depositDoc in depositDocs.docs) {
+        try {
+          // Extract deposit details
+          String depositId = depositDoc['depositId'];
+          String depositorId = depositDoc['id'];
+          double depositAmount = double.parse(depositDoc['depositAmount']);
+
+          // Ensure depositAmount is valid
+          if (depositAmount <= 0) {
+            debugPrint('Invalid deposit amount for depositId: $depositId');
+            continue;
+          }
+
+          // Calculate non-working income (5% of deposit amount)
+          double nonWorkingIncome = depositAmount * 0.05;
+
+          // Fetch the user document associated with the depositor
+          DocumentSnapshot userDoc =
+              await _firestore.collection('users').doc(depositorId).get();
+
+          if (userDoc.exists) {
+            // Add non-working income to the user's interests
+            await addInterestToUser(
+              userId: depositorId,
+              interestAmount: nonWorkingIncome,
+              depositId: depositId,
+              incomeFromUser: '',
+              type: 'non-working-income',
+            );
+
+            // Distribute Uni-level income based on the non-working income
+            await distributeUnilevelIncome(
+              userId: depositorId,
+              incomeAmount: nonWorkingIncome,
+              depositId: depositId,
+            );
+          } else {
+            debugPrint('User document not found for depositorId: $depositorId');
+          }
+        } catch (e) {
+          debugPrint(
+              'Error processing depositId: ${depositDoc['depositId']}, Error: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error triggering bi-weekly interest: $e');
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> distributeUnilevelIncome({
+    required String userId,
+    required double incomeAmount,
+    required String depositId,
+  }) async {
+    try {
+      // Fetch the user document by userId
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(userId).get();
+
+      if (!userDoc.exists) {
+        debugPrint('User document not found for ID: $userId');
+        return;
+      }
+
+      String? referredById = userDoc['referredBy'];
+      int level = 1;
+
+      // Start the level-wise distribution of Uni-level interest
+      while (referredById != null && level <= 20) {
+        try {
+          // Fetch the referred user's document
+          DocumentSnapshot referredUserDoc =
+              await _firestore.collection('users').doc(referredById).get();
+
+          if (!referredUserDoc.exists) {
+            debugPrint(
+                'Referred user document not found for ID: $referredById');
+            break;
+          }
+
+          List<String> referralIds =
+              (referredUserDoc['referredIds'] as List<dynamic>)
+                  .map((e) => e as String)
+                  .toList();
+
+          // Check if the referred user meets the direct referrals condition for this level
+          if (meetsDirectReferralCondition(level, referralIds.length)) {
+            double interestPercentage = getUnilevelInterestPercentage(level);
+            double interestAmount = incomeAmount * interestPercentage / 100;
+
+            // Add the Uni-level interest to the referred user's document
+            await addInterestToUser(
+                userId: referredUserDoc.id,
+                interestAmount: interestAmount,
+                depositId: depositId,
+                incomeFromUser: userId,
+                type: 'uni-level-income');
+          }
+
+          // Move to the next level
+          referredById =
+              referredUserDoc['referredBy']; // Get the next referredBy ID
+          level++;
+        } catch (e) {
+          debugPrint(
+              'Error distributing Uni-level income at level $level for userId: $userId, Error: $e');
+          break;
+        }
+      }
+    } catch (e) {
+      debugPrint('Error distributing Uni-level income: $e');
+    }
+  }
+
+  double getUnilevelInterestPercentage(int level) {
+    if (level == 1) {
+      return 15.0;
+    } else if (level == 2) {
+      return 12.0;
+    } else if (level >= 3 && level <= 10) {
+      return 5.0;
+    } else if (level >= 11 && level <= 20) {
+      return 3.0;
+    } else {
+      return 0.0; // No interest for levels beyond 20
     }
   }
 
@@ -204,8 +468,12 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
     }
   }
 
-  Future<void> addInterestToUser(String userId, double interestAmount,
-      String depositId, String incomeFromUser) async {
+  Future<void> addInterestToUser(
+      {required String userId,
+      required double interestAmount,
+      required String depositId,
+      required String incomeFromUser,
+      required String type}) async {
     await _firestore.collection('users').doc(userId).update({
       'interests': FieldValue.arrayUnion([
         IncomeModel(
@@ -213,7 +481,7 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
           depositId: depositId,
           incomeFromUser: incomeFromUser,
           incomeAmount: interestAmount.toString(),
-          incomeType: 'direct-referral-income',
+          incomeType: type,
           createdAt: DateTime.timestamp(),
           updatedAt: DateTime.timestamp(),
         ).toJson()

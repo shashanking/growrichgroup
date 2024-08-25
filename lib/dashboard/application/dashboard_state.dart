@@ -14,9 +14,14 @@ class DashboardState with _$DashboardState {
     @Default('') String depositId,
     @Default('') String depositAmount,
     @Default([]) List<UserModel> referredUsersList,
-    @Default(0.0) double totalIncome,
+    @Default(0.0) double totalDRIncome,
+    @Default(0.0) double totalNWIncome,
+    @Default(0.0) double totalULIncome,
+    @Default(0.0) double teamIncome,
     @Default(0) int noOfIncome,
+    @Default(0) int teamSum,
     @Default('') String levelAccess,
+    @Default('') String depositMap,
   }) = _DashboardState;
   const DashboardState._();
 }

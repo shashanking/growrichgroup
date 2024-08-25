@@ -12,7 +12,7 @@ class GlobalRewardCard extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'Global Reward',
+                'Lifetime Reward',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,

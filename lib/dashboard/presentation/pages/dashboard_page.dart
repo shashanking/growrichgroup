@@ -50,7 +50,6 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     bool isMobile = Device.screenType == ScreenType.mobile;
 
     final int level = getLevel(state.user?.referredIds?.length ?? 0);
-    // final double incomes = totalIncome(state.user!.incomes!) ?? 0;
 
     return Stack(
       children: [
@@ -63,104 +62,216 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                   backgroundColor: Colors.black87,
                 )
               : null,
-          body: SingleChildScrollView(
-            child: SizedBox(
-              height: 100.h,
-              width: 100.w,
-              child: Row(
-                children: [
-                  if (!isMobile) SideNavigation(),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Overview',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+          body: isMobile
+              ? SingleChildScrollView(
+                  child: Container(
+                    width: 100.w,
+                    // height: 100.h,
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  _showConfirmationDialog(context, () async {
+                                    await stateNotifier
+                                        .triggerBiWeeklyInterest();
+                                  });
+                                },
+                                child: const Text('Trigger Uni-Level Interest'),
+                              ),
+                            )
+                          ],
+                        ),
+                        const Text(
+                          'Overview',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(height: 16),
-                          Flex(
-                            direction:
-                                !isMobile ? Axis.horizontal : Axis.vertical,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        ),
+                        const SizedBox(height: 16),
+                        Flex(
+                          direction: Axis.vertical,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            OverviewCard(
+                              title: 'Self Investment',
+                              value: '₹ ${state.depositAmount}',
+                              percentage: '',
+                              color: Colors.pinkAccent,
+                            ),
+                            OverviewCard(
+                              title: 'Direct Referral Income',
+                              value: '₹ ${state.totalDRIncome}',
+                              percentage:
+                                  'from ${state.noOfIncome} direct referrals',
+                              color: Colors.purpleAccent,
+                            ),
+                            OverviewCard(
+                              title: 'Non Working Income',
+                              value: '₹ ${state.totalNWIncome}',
+                              percentage: '0% than last week',
+                              color: Colors.yellowAccent,
+                            ),
+                            OverviewCard(
+                              title: 'Uni Level Income',
+                              value: '₹ ${state.totalULIncome}',
+                              percentage: '0% than last week',
+                              color: Colors.yellowAccent,
+                            ),
+                            OverviewCard(
+                              title: 'Team',
+                              value: '${state.teamSum}',
+                              percentage:
+                                  '${state.user?.referredIds?.length ?? 0} direct referrals',
+                              color: Colors.greenAccent,
+                            ),
+                            OverviewCard(
+                              title: 'Team Business',
+                              value: '₹ ${state.teamIncome}',
+                              percentage: '0% than last week',
+                              color: Colors.yellowAccent,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Direct Referrals',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const DirectReferralListCard(),
+                        const SizedBox(height: 16),
+                        // GlobalIncomeCard(),
+                        // const SizedBox(height: 16),
+                        // GlobalRewardCard(),
+                      ],
+                    ),
+                  ),
+                )
+              : SizedBox(
+                  height: 100.h,
+                  width: 100.w,
+                  child: Row(
+                    children: [
+                      SideNavigation(),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              OverviewCard(
-                                title: 'Deposit',
-                                value: '₹ ${state.depositAmount}',
-                                percentage: '',
-                                color: Colors.pinkAccent,
+                              ElevatedButton(
+                                onPressed: () {
+                                  _showConfirmationDialog(context, () async {
+                                    await stateNotifier
+                                        .triggerBiWeeklyInterest();
+                                  });
+                                },
+                                child: const Text('Trigger Uni-Level Interest'),
                               ),
-                              OverviewCard(
-                                title: 'Direct Referral Income',
-                                value: '₹ ${state.totalIncome}',
-                                percentage:
-                                    'from ${state.noOfIncome} direct referrals',
-                                color: Colors.purpleAccent,
+                              const Text(
+                                'Overview',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              OverviewCard(
-                                title: 'Members',
-                                value: '${state.user?.referredIds?.length}',
-                                percentage: '$level Level Access',
-                                color: Colors.greenAccent,
+                              const SizedBox(height: 16),
+                              Wrap(
+                                direction: Axis.horizontal,
+                                // mainAxisAlignment:
+                                //     MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  OverviewCard(
+                                    title: 'Self Investment',
+                                    value: '₹ ${state.depositAmount}',
+                                    percentage: '',
+                                    color: Colors.pinkAccent,
+                                  ),
+                                  OverviewCard(
+                                    title: 'Direct Referral Income',
+                                    value: '₹ ${state.totalDRIncome}',
+                                    percentage:
+                                        'from ${state.noOfIncome} direct referrals',
+                                    color: Colors.purpleAccent,
+                                  ),
+                                  OverviewCard(
+                                    title: 'Non Working Income',
+                                    value: '₹ ${state.totalNWIncome}',
+                                    percentage: '0% than last week',
+                                    color: Colors.yellowAccent,
+                                  ),
+                                  OverviewCard(
+                                    title: 'Uni Level Income',
+                                    value: '₹ ${state.totalULIncome}',
+                                    percentage: '0% than last week',
+                                    color: Colors.yellowAccent,
+                                  ),
+                                  OverviewCard(
+                                    title: 'Team',
+                                    value: '${state.teamSum}',
+                                    percentage:
+                                        '${state.user?.referredIds?.length ?? 0} direct referrals',
+                                    color: Colors.greenAccent,
+                                  ),
+                                  OverviewCard(
+                                    title: 'Team Business',
+                                    value: '₹ ${state.teamIncome}',
+                                    percentage: '0% than last week',
+                                    color: Colors.yellowAccent,
+                                  ),
+                                ],
                               ),
-                              OverviewCard(
-                                title: 'Non Woking Income',
-                                value: '₹ 0',
-                                percentage: '0% than last week',
-                                color: Colors.yellowAccent,
+                              const SizedBox(height: 16),
+                              Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Direct Referrals',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          Flexible(
+                                              child: DirectReferralListCard()),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Column(
+                                      children: [
+                                        GlobalIncomeCard(),
+                                        // const SizedBox(height: 16),
+                                        // GlobalRewardCard(),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
-                          Expanded(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Direct Referrals',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: DirectReferralListCard(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                if (!isMobile) ...[
-                                  const SizedBox(width: 16),
-                                  Column(
-                                    children: [
-                                      GlobalIncomeCard(),
-                                      const SizedBox(height: 16),
-                                      GlobalRewardCard(),
-                                    ],
-                                  ),
-                                ]
-                              ],
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          ),
+                ),
         ),
         if (state.isLoading)
           Container(
@@ -174,4 +285,39 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
       ],
     );
   }
+}
+
+void _showConfirmationDialog(BuildContext context, VoidCallback callback) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirm Action'),
+        content: const Text(
+          'This will trigger two incomes:\n'
+          '1. Non-working income for all\n'
+          '2. Uni-level income for all\n'
+          'Do you want to proceed?',
+          style: TextStyle(color: Colors.black87),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              // write a function to trigger a non-working income
+              // & uni-level income for their referral chain of each user
+              callback.call();
+            },
+            child: const Text('Confirm'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
+      );
+    },
+  );
 }
