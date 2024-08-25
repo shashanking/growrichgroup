@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:growrichgroup_dashboard/login/shared/provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:growrichgroup_dashboard/routes/app_router.gr.dart';
+import 'package:growrichgroup_dashboard/core/routes/app_router.gr.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 @RoutePage()
@@ -123,24 +123,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           SizedBox(height: Adaptive.h(3)),
                           ElevatedButton(
                             onPressed: () async {
-                              final stateNotifier =
-                                  ref.read(authProvider.notifier);
+                              final stateNotifier = ref.read(authProvider.notifier);
                               final state = ref.read(authProvider);
                               if (_formKey.currentState!.validate()) {
                                 final res = await stateNotifier.signIn(
-                                    _usernameController.text,
-                                    _passwordController.text);
+                                    _usernameController.text, _passwordController.text);
 
                                 if (stateNotifier.isFirstTime && res == false) {
-                                  if (_passwordController.text !=
-                                      state.tmpPass) {
+                                  if (_passwordController.text != state.tmpPass) {
                                     _showToast('Check Provided Password');
                                   } else {
-                                    context.router.push(UpdatePasswordRoute(
-                                        kid: _usernameController.text));
+                                    context.router
+                                        .push(UpdatePasswordRoute(kid: _usernameController.text));
                                   }
-                                } else if (!stateNotifier.isFirstTime &&
-                                    res == true) {
+                                } else if (!stateNotifier.isFirstTime && res == true) {
                                   context.router.push(const DashboardRoute());
                                 } else {
                                   _showToast('Invalid Credentials');

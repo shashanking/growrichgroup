@@ -1,10 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:growrichgroup_dashboard/dashboard/application/dashboard_notifier.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:growrichgroup_dashboard/core/routes/app_router.gr.dart';
 import 'package:growrichgroup_dashboard/dashboard/shared/provider.dart';
 import 'package:growrichgroup_dashboard/login/domain/deposit_model.dart';
 import 'package:growrichgroup_dashboard/login/domain/user_model.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 class DirectReferralListCard extends ConsumerStatefulWidget {
   const DirectReferralListCard({super.key});
@@ -142,8 +143,21 @@ class _DirectReferralListCardState extends ConsumerState<DirectReferralListCard>
                                       return Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          _buildReferralRow(user, deposit.depositAmount,
-                                              deposit.createdAt, totalDeposit),
+                                          InkWell(
+                                            onTap: () {
+                                              if (user.referredIds?.isEmpty ?? false) {
+                                                Fluttertoast.showToast(
+                                                    msg: 'You have no referrals.');
+                                              } else {
+                                                AutoRouter.of(context).push(ReferralListRoute(
+                                                    depositId: user.depositId.last));
+                                              }
+                                            },
+                                            child: IgnorePointer(
+                                              child: _buildReferralRow(user, deposit.depositAmount,
+                                                  deposit.createdAt, totalDeposit),
+                                            ),
+                                          ),
                                           const SizedBox(
                                             height: 4,
                                           )

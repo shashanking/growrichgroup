@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:growrichgroup_dashboard/app_theme.dart';
 import 'package:growrichgroup_dashboard/firebase_options.dart';
 
-import '../routes/app_router.dart';
+import 'core/routes/app_router.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 void main() async {
