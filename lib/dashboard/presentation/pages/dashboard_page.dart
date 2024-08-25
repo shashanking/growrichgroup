@@ -73,17 +73,19 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                       children: [
                         Row(
                           children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _showConfirmationDialog(context, () async {
-                                    await stateNotifier
-                                        .triggerBiWeeklyInterest();
-                                  });
-                                },
-                                child: const Text('Trigger Uni-Level Interest'),
-                              ),
-                            )
+                            if (state.uid == 'GG1000001')
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    _showConfirmationDialog(context, () async {
+                                      await stateNotifier
+                                          .triggerBiWeeklyInterest();
+                                    });
+                                  },
+                                  child:
+                                      const Text('Trigger Uni-Level Interest'),
+                                ),
+                              )
                           ],
                         ),
                         const Text(
@@ -169,15 +171,17 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  _showConfirmationDialog(context, () async {
-                                    await stateNotifier
-                                        .triggerBiWeeklyInterest();
-                                  });
-                                },
-                                child: const Text('Trigger Uni-Level Interest'),
-                              ),
+                              if (state.uid == 'GG1000001')
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _showConfirmationDialog(context, () async {
+                                      await stateNotifier
+                                          .triggerBiWeeklyInterest();
+                                    });
+                                  },
+                                  child:
+                                      const Text('Trigger Uni-Level Interest'),
+                                ),
                               const Text(
                                 'Overview',
                                 style: TextStyle(
