@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:growrichgroup_dashboard/add_member/shared/provider.dart';
+import 'package:growrichgroup_dashboard/core/constants/app_constants.dart';
 import 'package:growrichgroup_dashboard/core/utils/upper_case_text_formatter.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -164,7 +165,7 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter the Deposit Amount';
                     } else if (int.tryParse(value) == null ||
-                        int.parse(value) < 5000) {
+                        int.parse(value) < AppConstants.minimumDeposit) {
                       return 'Deposit amount must be ₹5000 minimum.';
                     }
                     return null;

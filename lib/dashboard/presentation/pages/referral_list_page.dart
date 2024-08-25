@@ -24,7 +24,7 @@ class ReferralListPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Referral List'),
+        title: const Text('Team Network List'),
       ),
       body: FutureBuilder<List<UserModel>>(
         future: dashboardNotifier.fetchReferredUsersById(userId),

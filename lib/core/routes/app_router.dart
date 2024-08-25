@@ -10,5 +10,6 @@ class AppRouter extends $AppRouter {
         AutoRoute(page: AddMemberRoute.page, path: '/onboarding'),
         AutoRoute(page: UpdatePasswordRoute.page, path: '/update-password'),
         AutoRoute(page: ReferralListRoute.page, path: '/referral-list'),
+        AutoRoute(page: DepositRoute.page, path: '/deposit'),
       ];
 }

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:growrichgroup_dashboard/base/presentation/side_navidation.dart';
+import 'package:growrichgroup_dashboard/core/constants/app_constants.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../shared/provider.dart';
@@ -73,7 +74,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                       children: [
                         Row(
                           children: [
-                            if (state.uid == 'GG1000001')
+                            if (state.uid == AppConstants.adminId)
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
@@ -171,7 +172,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (state.uid == 'GG1000001')
+                              if (state.uid == AppConstants.adminId)
                                 ElevatedButton(
                                   onPressed: () {
                                     _showConfirmationDialog(context, () async {

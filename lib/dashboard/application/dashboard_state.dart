@@ -9,6 +9,7 @@ class DashboardState with _$DashboardState {
   const factory DashboardState({
     @Default(false) bool isLoading,
     @Default(null) UserModel? user,
+    @Default(null) UserModel? selectedMember,
     @Default(false) bool isVerified,
     @Default('') String uid,
     @Default('') String depositId,

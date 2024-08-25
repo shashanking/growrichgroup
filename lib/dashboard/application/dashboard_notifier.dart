@@ -655,4 +655,55 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
       throw Exception('Error fetching referred users: $e');
     }
   }
+
+  Future<Map<String, dynamic>> fetchUserAndReferredUsers(
+      String userId, String depositId) async {
+    try {
+      // Fetch the user document
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (!userDoc.exists) {
+        throw Exception('User not found');
+      }
+
+      final user = UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
+      final List<String> referredIds =
+          List<String>.from(userDoc.data()?['referredIds'] ?? []);
+
+      // Fetch referred users
+      final List<UserModel> referredUsersList = [];
+      for (String referredId in referredIds) {
+        final referredUserDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(referredId)
+            .get();
+        if (referredUserDoc.exists) {
+          referredUsersList.add(UserModel.fromJson(
+              referredUserDoc.data() as Map<String, dynamic>));
+        }
+      }
+
+      // Fetch deposit details (assuming you want to use this for UI purposes)
+      final depositDoc = await FirebaseFirestore.instance
+          .collection('deposits')
+          .doc(depositId)
+          .get();
+      final deposit = depositDoc.exists
+          ? DepositModel.fromJson(depositDoc.data() as Map<String, dynamic>)
+          : null;
+
+      // Return user and referred users in a single map
+      return {
+        'user': user,
+        'referredUsers': referredUsersList,
+        'deposit': deposit,
+      };
+    } catch (e) {
+      // Handle any errors that occur during the fetch
+      throw Exception('Error fetching user and referred users: $e');
+    }
+  }
 }

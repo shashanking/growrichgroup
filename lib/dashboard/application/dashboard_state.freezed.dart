@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$DashboardState {
   bool get isLoading => throw _privateConstructorUsedError;
   UserModel? get user => throw _privateConstructorUsedError;
+  UserModel? get selectedMember => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
   String get uid => throw _privateConstructorUsedError;
   String get depositId => throw _privateConstructorUsedError;
@@ -47,6 +48,7 @@ abstract class $DashboardStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       UserModel? user,
+      UserModel? selectedMember,
       bool isVerified,
       String uid,
       String depositId,
@@ -63,6 +65,7 @@ abstract class $DashboardStateCopyWith<$Res> {
       String depositMap});
 
   $UserModelCopyWith<$Res>? get user;
+  $UserModelCopyWith<$Res>? get selectedMember;
 }
 
 /// @nodoc
@@ -80,6 +83,7 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
   $Res call({
     Object? isLoading = null,
     Object? user = freezed,
+    Object? selectedMember = freezed,
     Object? isVerified = null,
     Object? uid = null,
     Object? depositId = null,
@@ -103,6 +107,10 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
+      selectedMember: freezed == selectedMember
+          ? _value.selectedMember
+          : selectedMember // ignore: cast_nullable_to_non_nullable
               as UserModel?,
       isVerified: null == isVerified
           ? _value.isVerified
@@ -174,6 +182,18 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<$Res>? get selectedMember {
+    if (_value.selectedMember == null) {
+      return null;
+    }
+
+    return $UserModelCopyWith<$Res>(_value.selectedMember!, (value) {
+      return _then(_value.copyWith(selectedMember: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -187,6 +207,7 @@ abstract class _$$DashboardStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       UserModel? user,
+      UserModel? selectedMember,
       bool isVerified,
       String uid,
       String depositId,
@@ -204,6 +225,8 @@ abstract class _$$DashboardStateImplCopyWith<$Res>
 
   @override
   $UserModelCopyWith<$Res>? get user;
+  @override
+  $UserModelCopyWith<$Res>? get selectedMember;
 }
 
 /// @nodoc
@@ -219,6 +242,7 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = null,
     Object? user = freezed,
+    Object? selectedMember = freezed,
     Object? isVerified = null,
     Object? uid = null,
     Object? depositId = null,
@@ -242,6 +266,10 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
+      selectedMember: freezed == selectedMember
+          ? _value.selectedMember
+          : selectedMember // ignore: cast_nullable_to_non_nullable
               as UserModel?,
       isVerified: null == isVerified
           ? _value.isVerified
@@ -309,6 +337,7 @@ class _$DashboardStateImpl extends _DashboardState {
   const _$DashboardStateImpl(
       {this.isLoading = false,
       this.user = null,
+      this.selectedMember = null,
       this.isVerified = false,
       this.uid = '',
       this.depositId = '',
@@ -333,6 +362,9 @@ class _$DashboardStateImpl extends _DashboardState {
   @override
   @JsonKey()
   final UserModel? user;
+  @override
+  @JsonKey()
+  final UserModel? selectedMember;
   @override
   @JsonKey()
   final bool isVerified;
@@ -392,7 +424,7 @@ class _$DashboardStateImpl extends _DashboardState {
 
   @override
   String toString() {
-    return 'DashboardState(isLoading: $isLoading, user: $user, isVerified: $isVerified, uid: $uid, depositId: $depositId, depositAmount: $depositAmount, referredUsersList: $referredUsersList, kReferredUsersList: $kReferredUsersList, totalDRIncome: $totalDRIncome, totalNWIncome: $totalNWIncome, totalULIncome: $totalULIncome, teamIncome: $teamIncome, noOfIncome: $noOfIncome, teamSum: $teamSum, levelAccess: $levelAccess, depositMap: $depositMap)';
+    return 'DashboardState(isLoading: $isLoading, user: $user, selectedMember: $selectedMember, isVerified: $isVerified, uid: $uid, depositId: $depositId, depositAmount: $depositAmount, referredUsersList: $referredUsersList, kReferredUsersList: $kReferredUsersList, totalDRIncome: $totalDRIncome, totalNWIncome: $totalNWIncome, totalULIncome: $totalULIncome, teamIncome: $teamIncome, noOfIncome: $noOfIncome, teamSum: $teamSum, levelAccess: $levelAccess, depositMap: $depositMap)';
   }
 
   @override
@@ -403,6 +435,8 @@ class _$DashboardStateImpl extends _DashboardState {
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.user, user) || other.user == user) &&
+            (identical(other.selectedMember, selectedMember) ||
+                other.selectedMember == selectedMember) &&
             (identical(other.isVerified, isVerified) ||
                 other.isVerified == isVerified) &&
             (identical(other.uid, uid) || other.uid == uid) &&
@@ -436,6 +470,7 @@ class _$DashboardStateImpl extends _DashboardState {
       runtimeType,
       isLoading,
       user,
+      selectedMember,
       isVerified,
       uid,
       depositId,
@@ -463,6 +498,7 @@ abstract class _DashboardState extends DashboardState {
   const factory _DashboardState(
       {final bool isLoading,
       final UserModel? user,
+      final UserModel? selectedMember,
       final bool isVerified,
       final String uid,
       final String depositId,
@@ -483,6 +519,8 @@ abstract class _DashboardState extends DashboardState {
   bool get isLoading;
   @override
   UserModel? get user;
+  @override
+  UserModel? get selectedMember;
   @override
   bool get isVerified;
   @override

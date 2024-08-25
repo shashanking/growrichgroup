@@ -8,9 +8,6 @@ import 'package:growrichgroup_dashboard/login/application/login_state.dart';
 import 'package:growrichgroup_dashboard/login/domain/i_auth_repository.dart';
 import 'package:riverpod/riverpod.dart';
 
-// GG1000001
-// theamit41
-
 class AuthNotifier extends StateNotifier<LoginState> {
   AuthNotifier(this._authRepository) : super(const LoginState());
 
@@ -27,8 +24,11 @@ class AuthNotifier extends StateNotifier<LoginState> {
     isLoginValid = true;
 
     try {
-      final userSnapshot =
-          await _firestore.collection('users').where('id', isEqualTo: username).limit(1).get();
+      final userSnapshot = await _firestore
+          .collection('users')
+          .where('id', isEqualTo: username)
+          .limit(1)
+          .get();
 
       if (userSnapshot.docs.isEmpty) {
         _handleInvalidCredentials();
@@ -44,7 +44,8 @@ class AuthNotifier extends StateNotifier<LoginState> {
 
       // If it's not the user's first time, proceed to normal sign-in
       if (!isFirstTime) {
-        final res = await _authRepository.signInWithUsernameAndPassword(username, password);
+        final res = await _authRepository.signInWithUsernameAndPassword(
+            username, password);
         state = state.copyWith(isLoading: false);
 
         if (res) {
@@ -92,7 +93,8 @@ class AuthNotifier extends StateNotifier<LoginState> {
     Fluttertoast.showToast(msg: message);
   }
 
-  Future<void> updatePassword(String email, String password, VoidCallback voidCallBack) async {
+  Future<void> updatePassword(
+      String email, String password, VoidCallback voidCallBack) async {
     try {
       state = state.copyWith(isLoading: true);
       final finalMail = '$email@growrichgroup.in';
