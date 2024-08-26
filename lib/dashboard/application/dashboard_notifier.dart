@@ -14,8 +14,8 @@ import 'package:growrichgroup_dashboard/login/domain/user_model.dart';
 import 'package:growrichgroup_dashboard/services/local_storage_service.dart';
 
 class DashboardNotifier extends StateNotifier<DashboardState> {
-  DashboardNotifier(this._localStorageService) : super(const DashboardState());
-  final LocalStorageService _localStorageService;
+  DashboardNotifier() : super(const DashboardState());
+  // final LocalStorageService _localStorageService;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -197,7 +197,7 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
               await calculateTotalDepositAmount(userFromModel.referredIds);
 
           // Save user's data to local storage
-          await saveUserDataLocally(userFromModel);
+          // await saveUserDataLocally(userFromModel);
 
           state = state.copyWith(
             uid: userID,
@@ -227,19 +227,19 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
     }
   }
 
-  Future<void> saveUserDataLocally(UserModel user) async {
-    await _localStorageService.setIsVerified(user.isVerified);
-    await _localStorageService.setUserId(user.id);
-    await _localStorageService.setUsername(user.username);
-    await _localStorageService.setPhoneNumber(user.phoneNumber);
-    await _localStorageService.setEmailId(user.emailId);
-    await _localStorageService.setDepositIds(user.depositId);
-    await _localStorageService.setTemporaryPassword(user.temporaryPassword);
-    await _localStorageService.setIsFirstTime(user.isFirstTime);
-    await _localStorageService.setPan(user.pan);
-    await _localStorageService.setReferredBy(user.referredBy);
-    await _localStorageService.setReferredIds(user.referredIds ?? []);
-  }
+  // Future<void> saveUserDataLocally(UserModel user) async {
+  //   await _localStorageService.setIsVerified(user.isVerified);
+  //   await _localStorageService.setUserId(user.id);
+  //   await _localStorageService.setUsername(user.username);
+  //   await _localStorageService.setPhoneNumber(user.phoneNumber);
+  //   await _localStorageService.setEmailId(user.emailId);
+  //   await _localStorageService.setDepositIds(user.depositId);
+  //   await _localStorageService.setTemporaryPassword(user.temporaryPassword);
+  //   await _localStorageService.setIsFirstTime(user.isFirstTime);
+  //   await _localStorageService.setPan(user.pan);
+  //   await _localStorageService.setReferredBy(user.referredBy);
+  //   await _localStorageService.setReferredIds(user.referredIds ?? []);
+  // }
 
   Future<double> totalIncome(List<IncomeModel>? incomes, {String? type}) async {
     if (incomes == null || incomes.isEmpty) {

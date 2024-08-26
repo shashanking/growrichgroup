@@ -6,16 +6,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final dashboardProvider =
     StateNotifierProvider<DashboardNotifier, DashboardState>((ref) {
-  final sharedPreferences = ref.watch(sharedPreferencesProvider).asData?.value;
-  if (sharedPreferences == null) {
-    throw UnimplementedError("SharedPreferences is not yet available");
-  }
+  // final sharedPreferences = ref.watch(sharedPreferencesProvider).asData?.value;
+  // if (sharedPreferences == null) {
+  //   throw UnimplementedError("SharedPreferences is not yet available");
+  // }
 
-  return DashboardNotifier(LocalStorageService(sharedPreferences));
+  return DashboardNotifier(); //LocalStorageService(sharedPreferences
 });
 
-final sharedPreferencesProvider =
-    FutureProvider<SharedPreferences>((ref) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs;
-});
+// final sharedPreferencesProvider =
+//     FutureProvider<SharedPreferences>((ref) async {
+//   final prefs = await SharedPreferences.getInstance();
+//   return prefs;
+// });
