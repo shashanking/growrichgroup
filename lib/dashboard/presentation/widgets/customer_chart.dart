@@ -12,7 +12,7 @@ class _GlobalIncomeCardState extends ConsumerState<GlobalIncomeCard> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
-      final stateNotifier = ref.read(dashbaordProvider.notifier);
+      final stateNotifier = ref.read(dashboardProvider.notifier);
       await stateNotifier.getUser();
     });
     super.initState();
@@ -20,7 +20,7 @@ class _GlobalIncomeCardState extends ConsumerState<GlobalIncomeCard> {
 
   @override
   Widget build(BuildContext context) {
-    final stateNotifier = ref.read(dashbaordProvider.notifier);
+    final stateNotifier = ref.read(dashboardProvider.notifier);
 
     return FutureBuilder<Map<String, dynamic>>(
       future: stateNotifier.checkUserGlobalLevel(),

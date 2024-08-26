@@ -20,7 +20,7 @@ class ReferralListPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dashboardNotifier = ref.watch(dashbaordProvider.notifier);
+    final dashboardNotifier = ref.watch(dashboardProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -50,7 +50,7 @@ class ReferralListPage extends ConsumerWidget {
 
   Widget _buildReferralList(
       BuildContext context, WidgetRef ref, List<UserModel> referredList) {
-    final dashboardNotifier = ref.watch(dashbaordProvider.notifier);
+    final dashboardNotifier = ref.watch(dashboardProvider.notifier);
 
     referredList.sort(
         (a, b) => b.createdAt?.compareTo(a.createdAt ?? DateTime.now()) ?? 0);

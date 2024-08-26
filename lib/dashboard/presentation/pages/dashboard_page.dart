@@ -23,7 +23,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
-      final stateNotifier = ref.read(dashbaordProvider.notifier);
+      final stateNotifier = ref.read(dashboardProvider.notifier);
       await stateNotifier.getUser();
       await stateNotifier.checkUserVerification();
     });
@@ -46,8 +46,8 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final stateNotifier = ref.read(dashbaordProvider.notifier);
-    final state = ref.watch(dashbaordProvider);
+    final stateNotifier = ref.read(dashboardProvider.notifier);
+    final state = ref.watch(dashboardProvider);
     bool isMobile = Device.screenType == ScreenType.mobile;
 
     final int level = getLevel(state.user?.referredIds?.length ?? 0);

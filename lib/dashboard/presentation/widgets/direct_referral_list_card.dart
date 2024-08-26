@@ -20,7 +20,7 @@ class _DirectReferralListCardState
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
-      final stateNotifier = ref.read(dashbaordProvider.notifier);
+      final stateNotifier = ref.read(dashboardProvider.notifier);
       await stateNotifier.getUser();
       await stateNotifier.fetchReferredUsers();
     });
@@ -29,8 +29,8 @@ class _DirectReferralListCardState
 
   @override
   Widget build(BuildContext context) {
-    final dasboardState = ref.watch(dashbaordProvider);
-    final dashboardNotifier = ref.watch(dashbaordProvider.notifier);
+    final dasboardState = ref.watch(dashboardProvider);
+    final dashboardNotifier = ref.watch(dashboardProvider.notifier);
 
     List<UserModel> sortedReferredList =
         List.from(dasboardState.referredUsersList);

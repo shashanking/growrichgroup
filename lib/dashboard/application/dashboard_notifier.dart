@@ -11,16 +11,19 @@ import 'package:growrichgroup_dashboard/core/constants/app_constants.dart';
 import 'package:growrichgroup_dashboard/dashboard/application/dashboard_state.dart';
 import 'package:growrichgroup_dashboard/login/domain/deposit_model.dart';
 import 'package:growrichgroup_dashboard/login/domain/user_model.dart';
+import 'package:growrichgroup_dashboard/services/local_storage_service.dart';
 
 class DashboardNotifier extends StateNotifier<DashboardState> {
-  DashboardNotifier() : super(const DashboardState());
+  DashboardNotifier(this._localStorageService) : super(const DashboardState());
+  final LocalStorageService _localStorageService;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String generateDirectReferralIncomeId() {
     const prefix = 'DR';
     final random = Random();
-    final randomNumber = random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
+    final randomNumber =
+        random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
     return '$prefix$randomNumber';
   }
 
@@ -32,14 +35,20 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
   Future<void> fetchReferredUsers() async {
     try {
       final List<UserModel> referredUsersList = [];
-      DocumentSnapshot referredUserDoc = await _firestore.collection('users').doc(state.uid).get();
+      DocumentSnapshot referredUserDoc =
+          await _firestore.collection('users').doc(state.uid).get();
 
       if (referredUserDoc.exists) {
         List<String> referralIds =
-            (referredUserDoc['referredIds'] as List<dynamic>).map((e) => e as String).toList();
+            (referredUserDoc['referredIds'] as List<dynamic>)
+                .map((e) => e as String)
+                .toList();
 
         for (String id in referralIds) {
-          final userDoc = await FirebaseFirestore.instance.collection('users').doc(id).get();
+          final userDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(id)
+              .get();
           if (userDoc.exists) {
             referredUsersList.add(UserModel.fromJson(userDoc.data()!));
           }
@@ -89,7 +98,8 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
     }
   }
 
-  Future<double> calculateTotalDepositAmount(List<String>? referredByIds) async {
+  Future<double> calculateTotalDepositAmount(
+      List<String>? referredByIds) async {
     try {
       if (referredByIds == null || referredByIds.isEmpty) {
         return 0.00;
@@ -116,7 +126,8 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
 
           if (deposit != null) {
             // Add the deposit amount to the total
-            totalDepositAmount += double.tryParse(deposit.depositAmount) ?? 0.00;
+            totalDepositAmount +=
+                double.tryParse(deposit.depositAmount) ?? 0.00;
           }
 
           // If the user has referredIds, add them to the queue
@@ -135,17 +146,21 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
 
 // Assuming you have a function to fetch DepositModel by ID
   Future<DepositModel?> fetchDepositById(String depositId) async {
-    return await FirebaseFirestore.instance.collection('deposits').doc(depositId).get().then(
-        (doc) => doc.exists ? DepositModel.fromJson(doc.data() as Map<String, dynamic>) : null);
+    return await FirebaseFirestore.instance
+        .collection('deposits')
+        .doc(depositId)
+        .get()
+        .then((doc) => doc.exists
+            ? DepositModel.fromJson(doc.data() as Map<String, dynamic>)
+            : null);
   }
 
 // Assuming you have a function to fetch UserModel by ID
   Future<UserModel?> fetchUserById(String userId) async {
-    return await _firestore
-        .collection('users')
-        .doc(userId)
-        .get()
-        .then((doc) => doc.exists ? UserModel.fromJson(doc.data() as Map<String, dynamic>) : null);
+    return await _firestore.collection('users').doc(userId).get().then((doc) =>
+        doc.exists
+            ? UserModel.fromJson(doc.data() as Map<String, dynamic>)
+            : null);
   }
 
   Future<void> getUser() async {
@@ -154,23 +169,35 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
       if (_auth.currentUser != null) {
         final userMail = _auth.currentUser!.email!;
         final userID = extractEmailPrefix(userMail);
-        DocumentSnapshot userDoc = await _firestore.collection('users').doc(userID).get();
+        DocumentSnapshot userDoc =
+            await _firestore.collection('users').doc(userID).get();
         if (userDoc.exists) {
-          UserModel userFromModel = UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
-          List<String> depositIds =
-              (userDoc['depositId'] as List<dynamic>).map((e) => e as String).toList();
+          UserModel userFromModel =
+              UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
+          List<String> depositIds = (userDoc['depositId'] as List<dynamic>)
+              .map((e) => e as String)
+              .toList();
 
-          DocumentSnapshot depositDoc =
-              await _firestore.collection('deposits').doc(depositIds.last).get();
+          DocumentSnapshot depositDoc = await _firestore
+              .collection('deposits')
+              .doc(depositIds.last)
+              .get();
           if (depositDoc.exists) {
             depositAmount = depositDoc['depositAmount'];
           }
 
-          final sumDR = await totalIncome(userFromModel.interests!, type: 'direct-referral-income');
-          final sumNW = await totalIncome(userFromModel.interests!, type: 'non-working-income');
-          final sumUL = await totalIncome(userFromModel.interests!, type: 'uni-level-income');
+          final sumDR = await totalIncome(userFromModel.interests!,
+              type: 'direct-referral-income');
+          final sumNW = await totalIncome(userFromModel.interests!,
+              type: 'non-working-income');
+          final sumUL = await totalIncome(userFromModel.interests!,
+              type: 'uni-level-income');
           final teamSum = await calculateTeamSum(userFromModel.referredIds);
-          final teamDepositSum = await calculateTotalDepositAmount(userFromModel.referredIds);
+          final teamDepositSum =
+              await calculateTotalDepositAmount(userFromModel.referredIds);
+
+          // Save user's data to local storage
+          await saveUserDataLocally(userFromModel);
 
           state = state.copyWith(
             uid: userID,
@@ -200,6 +227,20 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
     }
   }
 
+  Future<void> saveUserDataLocally(UserModel user) async {
+    await _localStorageService.setIsVerified(user.isVerified);
+    await _localStorageService.setUserId(user.id);
+    await _localStorageService.setUsername(user.username);
+    await _localStorageService.setPhoneNumber(user.phoneNumber);
+    await _localStorageService.setEmailId(user.emailId);
+    await _localStorageService.setDepositIds(user.depositId);
+    await _localStorageService.setTemporaryPassword(user.temporaryPassword);
+    await _localStorageService.setIsFirstTime(user.isFirstTime);
+    await _localStorageService.setPan(user.pan);
+    await _localStorageService.setReferredBy(user.referredBy);
+    await _localStorageService.setReferredIds(user.referredIds ?? []);
+  }
+
   Future<double> totalIncome(List<IncomeModel>? incomes, {String? type}) async {
     if (incomes == null || incomes.isEmpty) {
       return 0.00;
@@ -216,12 +257,15 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
     return total;
   }
 
-  Future<void> distributeReferralIncome({required String userId, required String depositId}) async {
+  Future<void> distributeReferralIncome(
+      {required String userId, required String depositId}) async {
     try {
       // Fetch the user document by userId
-      DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(userId).get();
 
-      DocumentSnapshot depositDoc = await _firestore.collection('deposits').doc(depositId).get();
+      DocumentSnapshot depositDoc =
+          await _firestore.collection('deposits').doc(depositId).get();
 
       if (userDoc.exists && depositDoc.exists) {
         String? referredById = userDoc['referredBy'];
@@ -237,7 +281,9 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
 
           if (referredUserDoc.exists) {
             List<String> referralIds =
-                (referredUserDoc['referredIds'] as List<dynamic>).map((e) => e as String).toList();
+                (referredUserDoc['referredIds'] as List<dynamic>)
+                    .map((e) => e as String)
+                    .toList();
 
             // Check if the referred user meets the direct referrals condition for this level
             if (meetsDirectReferralCondition(level, referralIds.length)) {
@@ -257,7 +303,8 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
             }
 
             // Move to the next level
-            referredById = referredUserDoc['referredBy']; // Get the next referredBy ID
+            referredById =
+                referredUserDoc['referredBy']; // Get the next referredBy ID
             if (referredById == null) {
               break;
             }
@@ -304,7 +351,8 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
           double nonWorkingIncome = depositAmount * 0.05;
 
           // Fetch the user document associated with the depositor
-          DocumentSnapshot userDoc = await _firestore.collection('users').doc(depositorId).get();
+          DocumentSnapshot userDoc =
+              await _firestore.collection('users').doc(depositorId).get();
 
           if (userDoc.exists) {
             // Add non-working income to the user's interests
@@ -326,7 +374,8 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
             debugPrint('User document not found for depositorId: $depositorId');
           }
         } catch (e) {
-          debugPrint('Error processing depositId: ${depositDoc['depositId']}, Error: $e');
+          debugPrint(
+              'Error processing depositId: ${depositDoc['depositId']}, Error: $e');
         }
       }
     } catch (e) {
@@ -343,7 +392,8 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
   }) async {
     try {
       // Fetch the user document by userId
-      DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(userId).get();
 
       if (!userDoc.exists) {
         debugPrint('User document not found for ID: $userId');
@@ -361,12 +411,15 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
               await _firestore.collection('users').doc(referredById).get();
 
           if (!referredUserDoc.exists) {
-            debugPrint('Referred user document not found for ID: $referredById');
+            debugPrint(
+                'Referred user document not found for ID: $referredById');
             break;
           }
 
           List<String> referralIds =
-              (referredUserDoc['referredIds'] as List<dynamic>).map((e) => e as String).toList();
+              (referredUserDoc['referredIds'] as List<dynamic>)
+                  .map((e) => e as String)
+                  .toList();
 
           // Check if the referred user meets the direct referrals condition for this level
           if (meetsDirectReferralCondition(level, referralIds.length)) {
@@ -383,7 +436,8 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
           }
 
           // Move to the next level
-          referredById = referredUserDoc['referredBy']; // Get the next referredBy ID
+          referredById =
+              referredUserDoc['referredBy']; // Get the next referredBy ID
           level++;
         } catch (e) {
           debugPrint(
@@ -480,7 +534,8 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
 
         if (userData != null && userData['isVerified'] == false) {
           // Run main direct referral logic
-          await distributeReferralIncome(userId: state.uid, depositId: state.depositId);
+          await distributeReferralIncome(
+              userId: state.uid, depositId: state.depositId);
 
           // then verify the user
           await _verifyUser(userRef);
@@ -511,10 +566,12 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
     try {
       // Fetch the user document
       final uid = extractEmailPrefix(_auth.currentUser?.email ?? '');
-      DocumentSnapshot userDoc = await _firestore.collection('users').doc(uid).get();
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(uid).get();
 
       if (userDoc.exists) {
-        List<String> referredIds = List<String>.from(userDoc['referredIds'] ?? []);
+        List<String> referredIds =
+            List<String>.from(userDoc['referredIds'] ?? []);
 
         if (referredIds.isEmpty) {
           return {
@@ -527,8 +584,10 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
         // Fetch the deposits of all referred users
         List<DocumentSnapshot> depositDocs = [];
         for (String referredId in referredIds) {
-          QuerySnapshot depositQuery =
-              await _firestore.collection('deposits').where('id', isEqualTo: referredId).get();
+          QuerySnapshot depositQuery = await _firestore
+              .collection('deposits')
+              .where('id', isEqualTo: referredId)
+              .get();
           depositDocs.addAll(depositQuery.docs);
         }
 
@@ -567,13 +626,18 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
           amountNeeded = 10000000 - totalDeposit;
         }
 
-        if (totalDeposit >= 10000000 && maxSingleDeposit >= totalDeposit * 0.4) {
+        if (totalDeposit >= 10000000 &&
+            maxSingleDeposit >= totalDeposit * 0.4) {
           currentLevel = 'Diamond';
           nextLevel = 'None';
           amountNeeded = 0;
         }
 
-        return {'level': currentLevel, 'nextLevel': nextLevel, 'amountNeeded': amountNeeded};
+        return {
+          'level': currentLevel,
+          'nextLevel': nextLevel,
+          'amountNeeded': amountNeeded
+        };
       } else {
         throw Exception('User not found');
       }
@@ -588,18 +652,24 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
       final List<UserModel> referredUsersList = [];
 
       // Fetch the referred user's document from Firestore based on userId
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
 
       if (userDoc.exists) {
-        final List<String> referredIds = List<String>.from(userDoc.data()?['referredIds'] ?? []);
+        final List<String> referredIds =
+            List<String>.from(userDoc.data()?['referredIds'] ?? []);
 
         // Fetch all the referred users based on referredIds
         for (String referredId in referredIds) {
-          final referredUserDoc =
-              await FirebaseFirestore.instance.collection('users').doc(referredId).get();
+          final referredUserDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(referredId)
+              .get();
           if (referredUserDoc.exists) {
-            referredUsersList
-                .add(UserModel.fromJson(referredUserDoc.data() as Map<String, dynamic>));
+            referredUsersList.add(UserModel.fromJson(
+                referredUserDoc.data() as Map<String, dynamic>));
           }
         }
       }
@@ -610,31 +680,41 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
     }
   }
 
-  Future<Map<String, dynamic>> fetchUserAndReferredUsers(String userId, String depositId) async {
+  Future<Map<String, dynamic>> fetchUserAndReferredUsers(
+      String userId, String depositId) async {
     try {
       // Fetch the user document
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
 
       if (!userDoc.exists) {
         throw Exception('User not found');
       }
 
       final user = UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
-      final List<String> referredIds = List<String>.from(userDoc.data()?['referredIds'] ?? []);
+      final List<String> referredIds =
+          List<String>.from(userDoc.data()?['referredIds'] ?? []);
 
       // Fetch referred users
       final List<UserModel> referredUsersList = [];
       for (String referredId in referredIds) {
-        final referredUserDoc =
-            await FirebaseFirestore.instance.collection('users').doc(referredId).get();
+        final referredUserDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(referredId)
+            .get();
         if (referredUserDoc.exists) {
-          referredUsersList.add(UserModel.fromJson(referredUserDoc.data() as Map<String, dynamic>));
+          referredUsersList.add(UserModel.fromJson(
+              referredUserDoc.data() as Map<String, dynamic>));
         }
       }
 
       // Fetch deposit details (assuming you want to use this for UI purposes)
-      final depositDoc =
-          await FirebaseFirestore.instance.collection('deposits').doc(depositId).get();
+      final depositDoc = await FirebaseFirestore.instance
+          .collection('deposits')
+          .doc(depositId)
+          .get();
       final deposit = depositDoc.exists
           ? DepositModel.fromJson(depositDoc.data() as Map<String, dynamic>)
           : null;
