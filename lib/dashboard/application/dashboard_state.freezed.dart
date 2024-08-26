@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$DashboardState {
   bool get isLoading => throw _privateConstructorUsedError;
+  bool get isAdmin => throw _privateConstructorUsedError;
   UserModel? get user => throw _privateConstructorUsedError;
   UserModel? get selectedMember => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
@@ -47,6 +48,7 @@ abstract class $DashboardStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isLoading,
+      bool isAdmin,
       UserModel? user,
       UserModel? selectedMember,
       bool isVerified,
@@ -82,6 +84,7 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isAdmin = null,
     Object? user = freezed,
     Object? selectedMember = freezed,
     Object? isVerified = null,
@@ -103,6 +106,10 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
               as bool,
       user: freezed == user
           ? _value.user
@@ -206,6 +213,7 @@ abstract class _$$DashboardStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {bool isLoading,
+      bool isAdmin,
       UserModel? user,
       UserModel? selectedMember,
       bool isVerified,
@@ -241,6 +249,7 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isAdmin = null,
     Object? user = freezed,
     Object? selectedMember = freezed,
     Object? isVerified = null,
@@ -262,6 +271,10 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
               as bool,
       user: freezed == user
           ? _value.user
@@ -336,6 +349,7 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
 class _$DashboardStateImpl extends _DashboardState {
   const _$DashboardStateImpl(
       {this.isLoading = false,
+      this.isAdmin = false,
       this.user = null,
       this.selectedMember = null,
       this.isVerified = false,
@@ -359,6 +373,9 @@ class _$DashboardStateImpl extends _DashboardState {
   @override
   @JsonKey()
   final bool isLoading;
+  @override
+  @JsonKey()
+  final bool isAdmin;
   @override
   @JsonKey()
   final UserModel? user;
@@ -424,7 +441,7 @@ class _$DashboardStateImpl extends _DashboardState {
 
   @override
   String toString() {
-    return 'DashboardState(isLoading: $isLoading, user: $user, selectedMember: $selectedMember, isVerified: $isVerified, uid: $uid, depositId: $depositId, depositAmount: $depositAmount, referredUsersList: $referredUsersList, kReferredUsersList: $kReferredUsersList, totalDRIncome: $totalDRIncome, totalNWIncome: $totalNWIncome, totalULIncome: $totalULIncome, teamIncome: $teamIncome, noOfIncome: $noOfIncome, teamSum: $teamSum, levelAccess: $levelAccess, depositMap: $depositMap)';
+    return 'DashboardState(isLoading: $isLoading, isAdmin: $isAdmin, user: $user, selectedMember: $selectedMember, isVerified: $isVerified, uid: $uid, depositId: $depositId, depositAmount: $depositAmount, referredUsersList: $referredUsersList, kReferredUsersList: $kReferredUsersList, totalDRIncome: $totalDRIncome, totalNWIncome: $totalNWIncome, totalULIncome: $totalULIncome, teamIncome: $teamIncome, noOfIncome: $noOfIncome, teamSum: $teamSum, levelAccess: $levelAccess, depositMap: $depositMap)';
   }
 
   @override
@@ -434,6 +451,7 @@ class _$DashboardStateImpl extends _DashboardState {
             other is _$DashboardStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
+            (identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin) &&
             (identical(other.user, user) || other.user == user) &&
             (identical(other.selectedMember, selectedMember) ||
                 other.selectedMember == selectedMember) &&
@@ -469,6 +487,7 @@ class _$DashboardStateImpl extends _DashboardState {
   int get hashCode => Object.hash(
       runtimeType,
       isLoading,
+      isAdmin,
       user,
       selectedMember,
       isVerified,
@@ -497,6 +516,7 @@ class _$DashboardStateImpl extends _DashboardState {
 abstract class _DashboardState extends DashboardState {
   const factory _DashboardState(
       {final bool isLoading,
+      final bool isAdmin,
       final UserModel? user,
       final UserModel? selectedMember,
       final bool isVerified,
@@ -517,6 +537,8 @@ abstract class _DashboardState extends DashboardState {
 
   @override
   bool get isLoading;
+  @override
+  bool get isAdmin;
   @override
   UserModel? get user;
   @override
