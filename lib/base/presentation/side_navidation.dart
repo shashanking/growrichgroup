@@ -22,7 +22,8 @@ class SideNavigation extends ConsumerWidget {
         children: [
           // Spacing from top
           Container(
-            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+            decoration: const BoxDecoration(
+                shape: BoxShape.circle, color: Colors.white),
             child: Image.asset(
               'assets/images/grg.png',
               scale: 2,
@@ -32,16 +33,18 @@ class SideNavigation extends ConsumerWidget {
           if (dashboardState.isAdmin) ...[
             ListTile(
               leading: const Icon(Icons.monetization_on, color: Colors.white),
-              title: const Text('Deposits', style: TextStyle(color: Colors.white)),
+              title: const Text('Check Deposits',
+                  style: TextStyle(color: Colors.white)),
               onTap: () {
                 AutoRouter.of(context).push(const DepositsReviewRoute());
-                if (!kIsWeb) Navigator.of(context).pop(); // Close the drawer
+                Navigator.of(context).pop(); // Close the drawer
               },
             ),
           ],
           ListTile(
             leading: const Icon(Icons.dashboard, color: Colors.white),
-            title: const Text('Dashboard', style: TextStyle(color: Colors.white)),
+            title:
+                const Text('Dashboard', style: TextStyle(color: Colors.white)),
             onTap: () {
               stateNotifier.tapBottomNavIndex(0);
               if (!kIsWeb) Navigator.of(context).pop(); // Close the drawer
@@ -49,7 +52,8 @@ class SideNavigation extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.person_add, color: Colors.white),
-            title: const Text('Add Member', style: TextStyle(color: Colors.white)),
+            title:
+                const Text('Add Member', style: TextStyle(color: Colors.white)),
             onTap: () {
               stateNotifier.tapBottomNavIndex(1);
               context.router.push(const AddMemberRoute()); // Close the drawer
@@ -58,10 +62,12 @@ class SideNavigation extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.money_sharp, color: Colors.white),
             title: const Text('Deposit', style: TextStyle(color: Colors.white)),
-            onTap: () {
+            onTap: () async {
+              await context.maybePop();
               stateNotifier.tapBottomNavIndex(2);
 
-              context.router.push(DepositRoute(userId: dashboardState.uid));
+              await context.router
+                  .push(DepositRoute(userId: dashboardState.uid));
             },
           ),
           // ListTile(

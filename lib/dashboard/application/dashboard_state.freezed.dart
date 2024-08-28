@@ -20,6 +20,8 @@ mixin _$DashboardState {
   bool get isAdmin => throw _privateConstructorUsedError;
   UserModel? get user => throw _privateConstructorUsedError;
   UserModel? get selectedMember => throw _privateConstructorUsedError;
+  List<DepositModel> get unverifiedDeposits =>
+      throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
   String get uid => throw _privateConstructorUsedError;
   String get depositId => throw _privateConstructorUsedError;
@@ -33,6 +35,7 @@ mixin _$DashboardState {
   int get noOfIncome => throw _privateConstructorUsedError;
   int get teamSum => throw _privateConstructorUsedError;
   String get levelAccess => throw _privateConstructorUsedError;
+  String get topUpId => throw _privateConstructorUsedError;
   String get depositMap => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -51,6 +54,7 @@ abstract class $DashboardStateCopyWith<$Res> {
       bool isAdmin,
       UserModel? user,
       UserModel? selectedMember,
+      List<DepositModel> unverifiedDeposits,
       bool isVerified,
       String uid,
       String depositId,
@@ -64,6 +68,7 @@ abstract class $DashboardStateCopyWith<$Res> {
       int noOfIncome,
       int teamSum,
       String levelAccess,
+      String topUpId,
       String depositMap});
 
   $UserModelCopyWith<$Res>? get user;
@@ -87,6 +92,7 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
     Object? isAdmin = null,
     Object? user = freezed,
     Object? selectedMember = freezed,
+    Object? unverifiedDeposits = null,
     Object? isVerified = null,
     Object? uid = null,
     Object? depositId = null,
@@ -100,6 +106,7 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
     Object? noOfIncome = null,
     Object? teamSum = null,
     Object? levelAccess = null,
+    Object? topUpId = null,
     Object? depositMap = null,
   }) {
     return _then(_value.copyWith(
@@ -119,6 +126,10 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
           ? _value.selectedMember
           : selectedMember // ignore: cast_nullable_to_non_nullable
               as UserModel?,
+      unverifiedDeposits: null == unverifiedDeposits
+          ? _value.unverifiedDeposits
+          : unverifiedDeposits // ignore: cast_nullable_to_non_nullable
+              as List<DepositModel>,
       isVerified: null == isVerified
           ? _value.isVerified
           : isVerified // ignore: cast_nullable_to_non_nullable
@@ -171,6 +182,10 @@ class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
           ? _value.levelAccess
           : levelAccess // ignore: cast_nullable_to_non_nullable
               as String,
+      topUpId: null == topUpId
+          ? _value.topUpId
+          : topUpId // ignore: cast_nullable_to_non_nullable
+              as String,
       depositMap: null == depositMap
           ? _value.depositMap
           : depositMap // ignore: cast_nullable_to_non_nullable
@@ -216,6 +231,7 @@ abstract class _$$DashboardStateImplCopyWith<$Res>
       bool isAdmin,
       UserModel? user,
       UserModel? selectedMember,
+      List<DepositModel> unverifiedDeposits,
       bool isVerified,
       String uid,
       String depositId,
@@ -229,6 +245,7 @@ abstract class _$$DashboardStateImplCopyWith<$Res>
       int noOfIncome,
       int teamSum,
       String levelAccess,
+      String topUpId,
       String depositMap});
 
   @override
@@ -252,6 +269,7 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
     Object? isAdmin = null,
     Object? user = freezed,
     Object? selectedMember = freezed,
+    Object? unverifiedDeposits = null,
     Object? isVerified = null,
     Object? uid = null,
     Object? depositId = null,
@@ -265,6 +283,7 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
     Object? noOfIncome = null,
     Object? teamSum = null,
     Object? levelAccess = null,
+    Object? topUpId = null,
     Object? depositMap = null,
   }) {
     return _then(_$DashboardStateImpl(
@@ -284,6 +303,10 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
           ? _value.selectedMember
           : selectedMember // ignore: cast_nullable_to_non_nullable
               as UserModel?,
+      unverifiedDeposits: null == unverifiedDeposits
+          ? _value._unverifiedDeposits
+          : unverifiedDeposits // ignore: cast_nullable_to_non_nullable
+              as List<DepositModel>,
       isVerified: null == isVerified
           ? _value.isVerified
           : isVerified // ignore: cast_nullable_to_non_nullable
@@ -336,6 +359,10 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
           ? _value.levelAccess
           : levelAccess // ignore: cast_nullable_to_non_nullable
               as String,
+      topUpId: null == topUpId
+          ? _value.topUpId
+          : topUpId // ignore: cast_nullable_to_non_nullable
+              as String,
       depositMap: null == depositMap
           ? _value.depositMap
           : depositMap // ignore: cast_nullable_to_non_nullable
@@ -352,6 +379,7 @@ class _$DashboardStateImpl extends _DashboardState {
       this.isAdmin = false,
       this.user = null,
       this.selectedMember = null,
+      final List<DepositModel> unverifiedDeposits = const [],
       this.isVerified = false,
       this.uid = '',
       this.depositId = '',
@@ -365,8 +393,10 @@ class _$DashboardStateImpl extends _DashboardState {
       this.noOfIncome = 0,
       this.teamSum = 0,
       this.levelAccess = '',
+      this.topUpId = '',
       this.depositMap = ''})
-      : _referredUsersList = referredUsersList,
+      : _unverifiedDeposits = unverifiedDeposits,
+        _referredUsersList = referredUsersList,
         _kReferredUsersList = kReferredUsersList,
         super._();
 
@@ -382,6 +412,16 @@ class _$DashboardStateImpl extends _DashboardState {
   @override
   @JsonKey()
   final UserModel? selectedMember;
+  final List<DepositModel> _unverifiedDeposits;
+  @override
+  @JsonKey()
+  List<DepositModel> get unverifiedDeposits {
+    if (_unverifiedDeposits is EqualUnmodifiableListView)
+      return _unverifiedDeposits;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_unverifiedDeposits);
+  }
+
   @override
   @JsonKey()
   final bool isVerified;
@@ -437,11 +477,14 @@ class _$DashboardStateImpl extends _DashboardState {
   final String levelAccess;
   @override
   @JsonKey()
+  final String topUpId;
+  @override
+  @JsonKey()
   final String depositMap;
 
   @override
   String toString() {
-    return 'DashboardState(isLoading: $isLoading, isAdmin: $isAdmin, user: $user, selectedMember: $selectedMember, isVerified: $isVerified, uid: $uid, depositId: $depositId, depositAmount: $depositAmount, referredUsersList: $referredUsersList, kReferredUsersList: $kReferredUsersList, totalDRIncome: $totalDRIncome, totalNWIncome: $totalNWIncome, totalULIncome: $totalULIncome, teamIncome: $teamIncome, noOfIncome: $noOfIncome, teamSum: $teamSum, levelAccess: $levelAccess, depositMap: $depositMap)';
+    return 'DashboardState(isLoading: $isLoading, isAdmin: $isAdmin, user: $user, selectedMember: $selectedMember, unverifiedDeposits: $unverifiedDeposits, isVerified: $isVerified, uid: $uid, depositId: $depositId, depositAmount: $depositAmount, referredUsersList: $referredUsersList, kReferredUsersList: $kReferredUsersList, totalDRIncome: $totalDRIncome, totalNWIncome: $totalNWIncome, totalULIncome: $totalULIncome, teamIncome: $teamIncome, noOfIncome: $noOfIncome, teamSum: $teamSum, levelAccess: $levelAccess, topUpId: $topUpId, depositMap: $depositMap)';
   }
 
   @override
@@ -455,6 +498,8 @@ class _$DashboardStateImpl extends _DashboardState {
             (identical(other.user, user) || other.user == user) &&
             (identical(other.selectedMember, selectedMember) ||
                 other.selectedMember == selectedMember) &&
+            const DeepCollectionEquality()
+                .equals(other._unverifiedDeposits, _unverifiedDeposits) &&
             (identical(other.isVerified, isVerified) ||
                 other.isVerified == isVerified) &&
             (identical(other.uid, uid) || other.uid == uid) &&
@@ -479,31 +524,35 @@ class _$DashboardStateImpl extends _DashboardState {
             (identical(other.teamSum, teamSum) || other.teamSum == teamSum) &&
             (identical(other.levelAccess, levelAccess) ||
                 other.levelAccess == levelAccess) &&
+            (identical(other.topUpId, topUpId) || other.topUpId == topUpId) &&
             (identical(other.depositMap, depositMap) ||
                 other.depositMap == depositMap));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      isLoading,
-      isAdmin,
-      user,
-      selectedMember,
-      isVerified,
-      uid,
-      depositId,
-      depositAmount,
-      const DeepCollectionEquality().hash(_referredUsersList),
-      const DeepCollectionEquality().hash(_kReferredUsersList),
-      totalDRIncome,
-      totalNWIncome,
-      totalULIncome,
-      teamIncome,
-      noOfIncome,
-      teamSum,
-      levelAccess,
-      depositMap);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        isLoading,
+        isAdmin,
+        user,
+        selectedMember,
+        const DeepCollectionEquality().hash(_unverifiedDeposits),
+        isVerified,
+        uid,
+        depositId,
+        depositAmount,
+        const DeepCollectionEquality().hash(_referredUsersList),
+        const DeepCollectionEquality().hash(_kReferredUsersList),
+        totalDRIncome,
+        totalNWIncome,
+        totalULIncome,
+        teamIncome,
+        noOfIncome,
+        teamSum,
+        levelAccess,
+        topUpId,
+        depositMap
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -519,6 +568,7 @@ abstract class _DashboardState extends DashboardState {
       final bool isAdmin,
       final UserModel? user,
       final UserModel? selectedMember,
+      final List<DepositModel> unverifiedDeposits,
       final bool isVerified,
       final String uid,
       final String depositId,
@@ -532,6 +582,7 @@ abstract class _DashboardState extends DashboardState {
       final int noOfIncome,
       final int teamSum,
       final String levelAccess,
+      final String topUpId,
       final String depositMap}) = _$DashboardStateImpl;
   const _DashboardState._() : super._();
 
@@ -543,6 +594,8 @@ abstract class _DashboardState extends DashboardState {
   UserModel? get user;
   @override
   UserModel? get selectedMember;
+  @override
+  List<DepositModel> get unverifiedDeposits;
   @override
   bool get isVerified;
   @override
@@ -569,6 +622,8 @@ abstract class _DashboardState extends DashboardState {
   int get teamSum;
   @override
   String get levelAccess;
+  @override
+  String get topUpId;
   @override
   String get depositMap;
   @override

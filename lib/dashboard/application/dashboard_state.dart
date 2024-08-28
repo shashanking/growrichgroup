@@ -1,5 +1,6 @@
 // ignore: depend_on_referenced_packages
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:growrichgroup_dashboard/login/domain/deposit_model.dart';
 import '../../login/domain/user_model.dart';
 
 part 'dashboard_state.freezed.dart';
@@ -11,6 +12,7 @@ class DashboardState with _$DashboardState {
     @Default(false) bool isAdmin,
     @Default(null) UserModel? user,
     @Default(null) UserModel? selectedMember,
+    @Default([]) List<DepositModel> unverifiedDeposits,
     @Default(false) bool isVerified,
     @Default('') String uid,
     @Default('') String depositId,
@@ -24,6 +26,7 @@ class DashboardState with _$DashboardState {
     @Default(0) int noOfIncome,
     @Default(0) int teamSum,
     @Default('') String levelAccess,
+    @Default('') String topUpId,
     @Default('') String depositMap,
   }) = _DashboardState;
   const DashboardState._();

@@ -38,10 +38,9 @@ class _DirectReferralListCardState
     sortedReferredList.sort(
         (a, b) => b.createdAt?.compareTo(a.createdAt ?? DateTime.now()) ?? 0);
 
-    return Card(
-      color: Colors.white.withOpacity(0.2),
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
+    return SingleChildScrollView(
+      child: Card(
+        color: Colors.white.withOpacity(0.2),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Column(

@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:growrichgroup_dashboard/core/constants/app_constants.dart';
@@ -19,8 +20,20 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  final TextEditingController panController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
+  String paymentMethod = 'cash';
+
   String generateDirectReferralIncomeId() {
     const prefix = 'DR';
+    final random = Random();
+    final randomNumber =
+        random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
+    return '$prefix$randomNumber';
+  }
+
+  String generateTopUpId() {
+    const prefix = 'TU';
     final random = Random();
     final randomNumber =
         random.nextInt(9000000) + 1000000; // Ensures a 7-digit number
@@ -216,6 +229,7 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
           if (state.uid == AppConstants.adminId) {
             state = state.copyWith(isAdmin: true);
           }
+          panController.text = state.user?.pan ?? '';
 
           debugPrint('user');
         } else {
@@ -728,6 +742,200 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
     } catch (e) {
       // Handle any errors that occur during the fetch
       throw Exception('Error fetching user and referred users: $e');
+    }
+  }
+
+  Future<bool> addTopUp() async {
+    try {
+      // Assuming state.user is your current user and state.user.depositId is populated
+      final String lastDepositId = state.user!.depositId.last;
+
+      // Fetch the last deposit document from the Firestore 'deposits' collection
+      DocumentSnapshot depositDoc =
+          await _firestore.collection('deposits').doc(lastDepositId).get();
+
+      if (depositDoc.exists) {
+        // Convert the document to a DepositModel
+        DepositModel deposit =
+            DepositModel.fromJson(depositDoc.data() as Map<String, dynamic>);
+
+        // Check if there are any top-ups that are not verified
+        bool unverifiedTopUpExists =
+            deposit.topUps?.any((topUp) => !topUp.isVerified) ?? false;
+
+        if (unverifiedTopUpExists) {
+          // Show Flutter toast if there is an unverified top-up
+          amountController.clear();
+          Fluttertoast.showToast(
+              msg:
+                  "Cannot add another top-up while one is pending verification.");
+          return false;
+        }
+
+        final String ktopUpId = generateTopUpId();
+        final String topUpId = ktopUpId;
+
+        // Create a new TopUpModel
+        TopUpModel newTopUp = TopUpModel(
+          id: state.uid,
+          topUpId: topUpId,
+          topupAmount: amountController.text,
+          depositorName: state.user?.username ?? '',
+          isVerified: false, // Set to false initially
+          createdAt: DateTime.timestamp(),
+        );
+        state = state.copyWith(topUpId: topUpId);
+
+        // Add the new top-up to the deposit's topUps list
+        List<TopUpModel> updatedTopUps = [...?deposit.topUps, newTopUp];
+        DepositModel updatedDeposit =
+            deposit.copyWith(topUps: updatedTopUps, updatedAt: DateTime.now());
+
+        // Update the deposit document in Firestore
+        await _firestore
+            .collection('deposits')
+            .doc(lastDepositId)
+            .set(updatedDeposit.toJson());
+
+        // Show a success toast
+        Fluttertoast.showToast(msg: "Top-up added successfully!");
+
+        return true;
+      } else {
+        // Show error toast if the deposit document doesn't exist
+        Fluttertoast.showToast(msg: "Deposit not found.");
+        return false;
+      }
+    } catch (e) {
+      // Handle any errors
+      debugPrint(e.toString());
+      Fluttertoast.showToast(msg: "An error occurred while adding the top-up.");
+      return false;
+    }
+  }
+
+  Future<void> fetchUnverifiedDeposits() async {
+    try {
+      // Query the deposits collection to get documents where topUps contain any item with isVerified == false
+      QuerySnapshot depositSnapshot =
+          await _firestore.collection('deposits').get();
+
+      List<DepositModel> unverifiedDeposits = [];
+
+      for (QueryDocumentSnapshot doc in depositSnapshot.docs) {
+        DepositModel deposit =
+            DepositModel.fromJson(doc.data() as Map<String, dynamic>);
+
+        bool hasUnverifiedTopUp =
+            deposit.topUps?.any((topUp) => !topUp.isVerified) ?? false;
+
+        if (hasUnverifiedTopUp) {
+          unverifiedDeposits.add(deposit);
+        }
+      }
+
+      // Update the state with the unverified deposits
+      state = state.copyWith(unverifiedDeposits: unverifiedDeposits);
+    } catch (e) {
+      debugPrint(e.toString());
+      // Handle error
+    }
+  }
+
+  Future<void> approveTopUp(DepositModel deposit) async {
+    try {
+      // Find the top-up with isVerified false
+      final unverifiedTopUp =
+          deposit.topUps?.firstWhere((topUp) => !topUp.isVerified);
+
+      if (unverifiedTopUp != null) {
+        // Add top-up amount to deposit amount
+        final updatedDepositAmount = (double.parse(deposit.depositAmount) +
+                double.parse(unverifiedTopUp.topupAmount))
+            .toString();
+
+        // Update the top-up to be verified
+        final updatedTopUps = deposit.topUps?.map((topUp) {
+          if (topUp.id == unverifiedTopUp.id) {
+            return topUp.copyWith(isVerified: true);
+          }
+          return topUp;
+        }).toList();
+
+        // Create the updated DepositModel
+        final updatedDeposit = deposit.copyWith(
+          depositAmount: updatedDepositAmount,
+          topUps: updatedTopUps,
+          updatedAt: DateTime.now(),
+        );
+
+        // Update the deposit in Firestore
+        await _firestore
+            .collection('deposits')
+            .doc(deposit.depositId)
+            .update(updatedDeposit.toJson());
+
+        // Update the state by removing the approved deposit
+        state = state.copyWith(
+          unverifiedDeposits: state.unverifiedDeposits
+              .where((d) => d.id != deposit.id)
+              .toList(),
+        );
+
+        // Show success message
+        Fluttertoast.showToast(msg: 'Top-up approved successfully');
+      }
+    } catch (e) {
+      // Handle error
+      Fluttertoast.showToast(msg: 'Failed to approve top-up: ${e.toString()}');
+    }
+  }
+
+  Future<void> rejectTopUp(DepositModel deposit) async {
+    try {
+      // Find the unverified top-up
+      final unverifiedTopUp =
+          deposit.topUps?.firstWhere((topUp) => !topUp.isVerified);
+
+      if (unverifiedTopUp != null) {
+        // Remove the unverified top-up from the list
+        final updatedTopUps = deposit.topUps
+            ?.where((topUp) => topUp.id != unverifiedTopUp.id)
+            .toList();
+
+        // Create the updated DepositModel
+        final updatedDeposit = deposit.copyWith(
+          topUps: updatedTopUps,
+          updatedAt: DateTime.now(),
+        );
+
+        // Update the deposit in Firestore
+        await _firestore
+            .collection('deposits')
+            .doc(deposit.depositId)
+            .update(updatedDeposit.toJson());
+
+        // Update the state by removing the deposit if it has no top-ups left,
+        // otherwise update it with the modified deposit.
+        if (updatedTopUps == null || updatedTopUps.isEmpty) {
+          state = state.copyWith(
+            unverifiedDeposits: state.unverifiedDeposits
+                .where((d) => d.id != deposit.id)
+                .toList(),
+          );
+        } else {
+          state = state.copyWith(
+            unverifiedDeposits: state.unverifiedDeposits.map((d) {
+              return d.id == deposit.id ? updatedDeposit : d;
+            }).toList(),
+          );
+        }
+
+        Fluttertoast.showToast(msg: 'Top-up rejected successfully');
+      }
+    } catch (e) {
+      // Handle error
+      Fluttertoast.showToast(msg: 'Failed to reject top-up: ${e.toString()}');
     }
   }
 }

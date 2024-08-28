@@ -17,6 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$DepositState {
   bool get isLoading => throw _privateConstructorUsedError;
+  bool get isAdmin => throw _privateConstructorUsedError;
+  String get uid => throw _privateConstructorUsedError;
+  UserModel? get user => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DepositStateCopyWith<DepositState> get copyWith =>
@@ -29,7 +32,9 @@ abstract class $DepositStateCopyWith<$Res> {
           DepositState value, $Res Function(DepositState) then) =
       _$DepositStateCopyWithImpl<$Res, DepositState>;
   @useResult
-  $Res call({bool isLoading});
+  $Res call({bool isLoading, bool isAdmin, String uid, UserModel? user});
+
+  $UserModelCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -46,13 +51,40 @@ class _$DepositStateCopyWithImpl<$Res, $Val extends DepositState>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isAdmin = null,
+    Object? uid = null,
+    Object? user = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
+      uid: null == uid
+          ? _value.uid
+          : uid // ignore: cast_nullable_to_non_nullable
+              as String,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<$Res>? get user {
+    if (_value.user == null) {
+      return null;
+    }
+
+    return $UserModelCopyWith<$Res>(_value.user!, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
+    });
   }
 }
 
@@ -64,7 +96,10 @@ abstract class _$$DepositStateImplCopyWith<$Res>
       __$$DepositStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading});
+  $Res call({bool isLoading, bool isAdmin, String uid, UserModel? user});
+
+  @override
+  $UserModelCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -79,12 +114,27 @@ class __$$DepositStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isAdmin = null,
+    Object? uid = null,
+    Object? user = freezed,
   }) {
     return _then(_$DepositStateImpl(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
+      uid: null == uid
+          ? _value.uid
+          : uid // ignore: cast_nullable_to_non_nullable
+              as String,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
     ));
   }
 }
@@ -92,15 +142,29 @@ class __$$DepositStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DepositStateImpl extends _DepositState {
-  const _$DepositStateImpl({this.isLoading = false}) : super._();
+  const _$DepositStateImpl(
+      {this.isLoading = false,
+      this.isAdmin = false,
+      this.uid = '',
+      this.user = null})
+      : super._();
 
   @override
   @JsonKey()
   final bool isLoading;
+  @override
+  @JsonKey()
+  final bool isAdmin;
+  @override
+  @JsonKey()
+  final String uid;
+  @override
+  @JsonKey()
+  final UserModel? user;
 
   @override
   String toString() {
-    return 'DepositState(isLoading: $isLoading)';
+    return 'DepositState(isLoading: $isLoading, isAdmin: $isAdmin, uid: $uid, user: $user)';
   }
 
   @override
@@ -109,11 +173,14 @@ class _$DepositStateImpl extends _DepositState {
         (other.runtimeType == runtimeType &&
             other is _$DepositStateImpl &&
             (identical(other.isLoading, isLoading) ||
-                other.isLoading == isLoading));
+                other.isLoading == isLoading) &&
+            (identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin) &&
+            (identical(other.uid, uid) || other.uid == uid) &&
+            (identical(other.user, user) || other.user == user));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading);
+  int get hashCode => Object.hash(runtimeType, isLoading, isAdmin, uid, user);
 
   @JsonKey(ignore: true)
   @override
@@ -123,11 +190,21 @@ class _$DepositStateImpl extends _DepositState {
 }
 
 abstract class _DepositState extends DepositState {
-  const factory _DepositState({final bool isLoading}) = _$DepositStateImpl;
+  const factory _DepositState(
+      {final bool isLoading,
+      final bool isAdmin,
+      final String uid,
+      final UserModel? user}) = _$DepositStateImpl;
   const _DepositState._() : super._();
 
   @override
   bool get isLoading;
+  @override
+  bool get isAdmin;
+  @override
+  String get uid;
+  @override
+  UserModel? get user;
   @override
   @JsonKey(ignore: true)
   _$$DepositStateImplCopyWith<_$DepositStateImpl> get copyWith =>

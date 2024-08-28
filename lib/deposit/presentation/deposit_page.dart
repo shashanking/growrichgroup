@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:growrichgroup_dashboard/core/constants/app_constants.dart';
 import 'package:growrichgroup_dashboard/core/utils/upper_case_text_formatter.dart';
+import 'package:growrichgroup_dashboard/dashboard/shared/provider.dart';
+import 'package:growrichgroup_dashboard/deposit/presentation/certificate_widget.dart';
 import 'package:growrichgroup_dashboard/deposit/shared/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -21,15 +25,38 @@ class _DepositPageState extends ConsumerState<DepositPage> {
   final RegExp pancardRegex = RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]$');
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
+      final stateNotifier = ref.read(dashboardProvider.notifier);
+      await stateNotifier.getUser();
+    });
+    super.initState();
+  }
+
+  @override
   void dispose() {
-    final stateNotifier = ref.read(depositProvider.notifier);
+    final stateNotifier = ref.read(dashboardProvider.notifier);
     stateNotifier.dispose();
     super.dispose();
   }
 
+  void showSuccessCard(BuildContext context, String depositId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          content: DepositSuccessCard(depositId: depositId),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final stateNotifier = ref.read(depositProvider.notifier);
+    final stateNotifier = ref.read(dashboardProvider.notifier);
+    final state = ref.watch(dashboardProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Deposit Form'),
@@ -47,6 +74,7 @@ class _DepositPageState extends ConsumerState<DepositPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextFormField(
+                      enabled: false,
                       controller: stateNotifier.panController,
                       decoration: const InputDecoration(
                         labelText: 'PAN',
@@ -108,7 +136,16 @@ class _DepositPageState extends ConsumerState<DepositPage> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
-                          // submit deposit 
+                          _showConfirmationDialog(
+                            context,
+                            () async {
+                              final res = await stateNotifier.addTopUp();
+                              if (res) {
+                                showSuccessCard(context, state.topUpId);
+                              }
+                            },
+                            stateNotifier.amountController.text,
+                          );
                         }
                       },
                       child: const Text('Submit'),
@@ -122,4 +159,39 @@ class _DepositPageState extends ConsumerState<DepositPage> {
       ),
     );
   }
+}
+
+void _showConfirmationDialog(
+    BuildContext context, VoidCallback callback, String amount) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirm Action'),
+        content: Text(
+          'This will Deposit new topup incomes:\n'
+          'Amount : $amount\n'
+          'Do you want to proceed?',
+          style: const TextStyle(color: Colors.black87),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              // write a function to trigger a non-working income
+              // & uni-level income for their referral chain of each user
+              callback.call();
+            },
+            child: const Text('Confirm'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
+      );
+    },
+  );
 }

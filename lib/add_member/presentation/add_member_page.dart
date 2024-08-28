@@ -4,9 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:growrichgroup_dashboard/add_member/shared/provider.dart';
 import 'package:growrichgroup_dashboard/core/constants/app_constants.dart';
 import 'package:growrichgroup_dashboard/core/utils/upper_case_text_formatter.dart';
+import 'package:growrichgroup_dashboard/login/domain/user_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 @RoutePage()
@@ -52,9 +54,10 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     final notifier = ref.read(addMemberProvider.notifier);
-    final newUser = ref.watch(addMemberProvider).newUser;
+    final state = ref.watch(addMemberProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Add New Member')),
@@ -175,16 +178,24 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
 
                 // Add Member Button
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       // Add member logic
-                      notifier.registerMember(
+                      await notifier.registerMember(
                         name: _nameController.text,
                         phone: _phoneController.text,
                         email: _emailController.text,
                         panCard: _panCardController.text,
                         depositAmount: _depositAmountController.text,
                       );
+
+                      // Listen for changes in newUser and show dialog when data is available
+                      await notifier.addListener((state) {
+                        final newUser = state.newUser;
+                        if (newUser != null) {
+                          _showNewUserDetailsDialog(context, newUser);
+                        }
+                      });
 
                       // Clear the form fields after submission
                       _nameController.clear();
@@ -200,17 +211,6 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
                   ),
                   child: const Text('Add Member'),
                 ),
-                SizedBox(height: 24.sp),
-
-                // Show new user details after form submission
-                if (newUser != null) ...[
-                  const SelectableText('New User Details:'),
-                  SizedBox(height: 8.sp),
-                  SelectableText('Username: ${newUser.id}'),
-                  SelectableText('Name: ${newUser.username}'),
-                  SelectableText(
-                      'Temporary password: ${newUser.temporaryPassword}'),
-                ],
               ],
             ),
           ),
@@ -218,4 +218,103 @@ class _AddMemberPageState extends ConsumerState<AddMemberPage> {
       ),
     );
   }
+}
+
+void _showNewUserDetailsDialog(BuildContext context, UserModel newUser) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.black,
+        contentPadding: EdgeInsets.all(16.sp),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'New User Details',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16.sp),
+            SelectableText(
+              'ID: ${newUser.id}',
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            SelectableText(
+              'Name: ${newUser.username}',
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            SelectableText(
+              'Temporary password: ${newUser.temporaryPassword}',
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            SizedBox(height: 24.sp),
+            const Text(
+              'Note: Please make sure to take a note of the above details.',
+              style: TextStyle(color: Colors.orangeAccent, fontSize: 14),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.orangeAccent,
+              padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 24.sp),
+            ),
+            child: const Text(
+              'Done',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              // Copy the user details to the clipboard
+              Clipboard.setData(
+                ClipboardData(
+                  text:
+                      'ID: ${newUser.id}\nName: ${newUser.username}\nTemporary Password: ${newUser.temporaryPassword}',
+                ),
+              );
+              // Show a toast message
+              Fluttertoast.showToast(
+                msg: "User details copied to clipboard!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.black,
+                textColor: Colors.orangeAccent,
+              );
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.orangeAccent,
+              padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 24.sp),
+            ),
+            child: const Text(
+              'Copy',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.orangeAccent,
+              padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 24.sp),
+            ),
+            child: const Text(
+              'Done',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
